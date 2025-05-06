@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "551440122305",
+    "project_id": "embedded2025-7f3f5",
+    "storage_bucket": "embedded2025-7f3f5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551440122305:android:b53225e34144ee1b3def40",
+        "android_client_info": {
+          "package_name": "com.myapp.chefgpt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYUKT-1OGDTG3hFsQkjxoqXo0vMlyY-c8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
