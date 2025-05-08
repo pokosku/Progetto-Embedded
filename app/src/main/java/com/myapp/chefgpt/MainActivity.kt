@@ -46,24 +46,25 @@ class MainActivity : AppCompatActivity() {
         val imageView = findViewById<ImageView>(R.id.imageView)
         val predictButton = findViewById<Button>(R.id.predictButton)
         val predictionView = findViewById<TextView>(R.id.predictionView)
-        val downloadModelButton = findViewById<Button>(R.id.downloadModelButton)
 
 
         var imageBitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888)
 
-        takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                imageBitmap = result.data?.extras?.get("data") as Bitmap
-                imageView.setImageBitmap(imageBitmap)
+        takePictureLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    imageBitmap = result.data?.extras?.get("data") as Bitmap
+                    imageView.setImageBitmap(imageBitmap)
+                }
             }
-        }
 
-        pickImageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                val imageUri = result.data?.data
-                imageView.setImageURI(imageUri)
+        pickImageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val imageUri = result.data?.data
+                    imageView.setImageURI(imageUri)
+                }
             }
-        }
 
         takePictureButton.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -76,49 +77,49 @@ class MainActivity : AppCompatActivity() {
             pickImageLauncher.launch(intent)
         }
 
-        predictButton.setOnClickListener{
-            //val result = llmInference.generateResponse("Hello")
+        predictButton.setOnClickListener {
+            predictionView.text = "Predicting..."
+            try {
+                val image = Bitmap.createBitmap((imageView.drawable as BitmapDrawable).bitmap)
 
-            val image = Bitmap.createBitmap((imageView.drawable as BitmapDrawable).bitmap)
+                imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
 
-            imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
+                val input = TensorImage.fromBitmap(imageBitmap)
 
-            val input = TensorImage.fromBitmap(imageBitmap)
-
-            val outputs = model.process(input)
-            val probability = outputs.probabilityAsCategoryList
+                val outputs = model.process(input)
+                val probability = outputs.probabilityAsCategoryList
 
 //            var categoryBest = probability.maxByOrNull { it.score }
 //            val label = categoryBest?.label
 //            val score = categoryBest?.score?.times(100)
 //            val score_percent = "${score.toString().substring(0,5)}%"
 //            predictionView.text = "I'm $score_percent sure this is $label"
-            var results : String = "My guesses are:\n"
-            var best : String? = ""
+                var results: String = "My guesses are:\n"
+                var best: String? = ""
 
-            for (i in 0..2) {
+                for (i in 0..2) {
 
-                var categoryBest = probability.maxByOrNull { it.score }
+                    var categoryBest = probability.maxByOrNull { it.score }
 
-                val label = categoryBest?.label
+                    val label = categoryBest?.label
 
-                if(i == 0)
-                    best = label
-                val score = categoryBest?.score?.times(100)
-                val score_percent = "${score.toString().substring(0,5)}%"
-                probability.remove(categoryBest)
-                categoryBest = probability.maxByOrNull { it.score }
-                results = "$results\n $label   $score_percent"
+                    if (i == 0)
+                        best = label
+                    val score = categoryBest?.score?.times(100)
+                    //val score_percent = "${score.toString().substring(0, 5)}%"
+                    probability.remove(categoryBest)
+                    categoryBest = probability.maxByOrNull { it.score }
+                    //results = "$results\n $label   $score_percent"
+                }
+                predictionView.text =
+                    llmInference.generateResponse("Dammi la ricetta per $best, scrivila come se fossi la mia cara nonnina di nome Chef e cognome Geppeti")
+                imageBitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888)
+
+            } catch (e: NullPointerException) {
+                predictionView.text = "Upload an image first!"
             }
-            predictionView.text = llmInference.generateResponse("Give me the ingredients for $best, do not say anything else")
-
 
         }
 
-        downloadModelButton.setOnClickListener{
-
-        }
     }
-
-
 }
