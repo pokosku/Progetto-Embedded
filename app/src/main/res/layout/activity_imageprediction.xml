@@ -6,9 +6,29 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="300dp"
+      android:layout_height="300dp"
+      android:layout_marginTop="32dp"
+      android:scaleType="centerCrop"
+      android:background="#CCCCCC" />
+
   <Button
-    android:id="@+id/toFoodResult"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="vai a food result" />
-    </LinearLayout>
+      android:id="@+id/toFoodResult"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="vai a food result"/>
+
+  <Button
+      android:id="@+id/openCamera"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Camera"/>
+
+  <Button
+      android:id="@+id/openGallery"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Gallery"/>
+</LinearLayout>
