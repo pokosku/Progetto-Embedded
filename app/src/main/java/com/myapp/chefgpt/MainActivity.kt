@@ -35,6 +35,11 @@ class MainActivity : AppCompatActivity() {
             .setPreferredBackend(LlmInference.Backend.CPU)
             .build()
 
+        val buttonToImagePrediction: Button = findViewById(R.id.toImagePredictionButton)
+        buttonToImagePrediction.setOnClickListener{ view->
+            val intent= Intent(view.context,ImagePredictionActivity::class.java)
+            startActivity(intent)
+        }
 // Create an instance of the LLM Inference task
         val llmInference = LlmInference.createFromOptions(this, taskOptions)
 
@@ -112,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                     //results = "$results\n $label   $score_percent"
                 }
                 predictionView.text =
-                    llmInference.generateResponse("Dammi la ricetta per $best, scrivila come se fossi la mia cara nonnina di nome Chef e cognome Geppeti")
+                    llmInference.generateResponse("Give me the recipe for $best, without adding anything else")
                 imageBitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888)
 
             } catch (e: NullPointerException) {
