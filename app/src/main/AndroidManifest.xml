@@ -13,15 +13,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChefGPT"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ImagePredictionActivity">
+        </activity>
+        <activity
+            android:name=".FoodResultActivity">
+        </activity>
+        <activity
+            android:name=".RecipeResultActivity">
+        </activity>
+
         <uses-native-library android:name="libOpenCL.so" android:required="false"/>
         <uses-native-library android:name="libOpenCL-car.so" android:required="false"/>
         <uses-native-library android:name="libOpenCL-pixel.so" android:required="false"/>
