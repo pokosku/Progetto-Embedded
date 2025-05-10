@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.myapp.chefgpt.ml.AutoModel1
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import com.google.mediapipe.tasks.genai.llminference.LlmInference.LlmInferenceOptions
+import kotlinx.coroutines.time.delay
 import org.tensorflow.lite.support.image.TensorImage
 
 
