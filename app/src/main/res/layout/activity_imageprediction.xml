@@ -45,13 +45,20 @@
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
+  <Button
+      android:id="@+id/predictButton"
+      android:layout_width="130dp"
+      android:layout_height="65dp"
+      android:textSize="20sp"
+      android:text="Predict" />
+
   <TextView
       android:id="@+id/foodName"
       android:layout_width="269dp"
       android:layout_height="87dp"
-      android:textSize="20sp"
       android:gravity="center"
-      android:text="TextView" />
+      android:text="Select an image"
+      android:textSize="20sp" />
 
   <Button
       android:id="@+id/toRecipeResult"
