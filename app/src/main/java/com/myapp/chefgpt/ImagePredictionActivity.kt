@@ -24,7 +24,7 @@ class ImagePredictionActivity : AppCompatActivity() {
         val takePictureButton = findViewById<Button>(R.id.openCamera)
         val pickImageButton = findViewById<Button>(R.id.openGallery)
 
-        val buttonToFoodResult: Button=findViewById(R.id.toFoodResult)
+        val buttonToFoodResult: Button=findViewById(R.id.toRecipeResult)
         buttonToFoodResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeResultActivity::class.java)
             intent.putExtra("foodname",string)
