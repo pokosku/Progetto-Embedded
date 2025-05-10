@@ -1,29 +1,20 @@
 package com.myapp.chefgpt
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
-import android.Manifest
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import java.io.File
 
 class ImagePredictionActivity : AppCompatActivity() {
 
-    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
-    private lateinit var permissionLauncher: ActivityResultLauncher<String>
-    private lateinit var imageUri: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +26,7 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         val buttonToFoodResult: Button=findViewById(R.id.toFoodResult)
         buttonToFoodResult.setOnClickListener{ view->
-            val intent= Intent(view.context,FoodResultActivity::class.java)
+            val intent= Intent(view.context,RecipeResultActivity::class.java)
             intent.putExtra("foodname",string)
             startActivity(intent)
 
@@ -45,20 +36,11 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         var imageBitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888)
 
-        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (granted) {
-                launchCamera()
-            } else {
-                Log.e("PermissionDenied","Camera permission denied")
-            }
-        }
-
         takePictureLauncher =
-            registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-                if (success) {
-                    imageView.setImageURI(imageUri)
-                }else{
-                    Log.e("CameraError","Image not saved")
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    imageBitmap = result.data?.extras?.get("data") as Bitmap
+                    imageView.setImageBitmap(imageBitmap)
                 }
             }
 
@@ -71,9 +53,9 @@ class ImagePredictionActivity : AppCompatActivity() {
                 }
             }
 
-
         takePictureButton.setOnClickListener {
-            checkCameraPermissionAndLaunch()
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            takePictureLauncher.launch(intent)
         }
 
         pickImageButton.setOnClickListener {
@@ -83,24 +65,6 @@ class ImagePredictionActivity : AppCompatActivity() {
         }
 
 
-    }
-
-    private fun launchCamera(){
-        val photoFile = File.createTempFile("photo",".jpg",cacheDir).apply {
-            createNewFile()
-            deleteOnExit()
-        }
-        imageUri=FileProvider.getUriForFile(this,"${packageName}.provider",photoFile)
-        takePictureLauncher.launch(imageUri)
-    }
-
-    private fun checkCameraPermissionAndLaunch() {
-        val permission = Manifest.permission.CAMERA
-        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
-            launchCamera()
-        } else {
-            permissionLauncher.launch(permission)
-        }
     }
 
 }

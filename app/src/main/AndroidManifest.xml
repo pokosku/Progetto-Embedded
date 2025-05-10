@@ -43,9 +43,6 @@
             android:name=".ImagePredictionActivity">
         </activity>
         <activity
-            android:name=".FoodResultActivity">
-        </activity>
-        <activity
             android:name=".RecipeResultActivity">
         </activity>
 
