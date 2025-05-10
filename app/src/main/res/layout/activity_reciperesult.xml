@@ -17,13 +17,22 @@
         android:scaleType="centerCrop" />
 
 
-    <TextView
-        android:id="@+id/recipeText"
-        android:layout_width="269dp"
-        android:layout_height="87dp"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:text="TextView" />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="294dp"
+        android:background="#FFF"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8dp"
+            android:textColor="#333"
+            android:textSize="18sp" />
+
+    </ScrollView>
 
     <Button
         android:id="@+id/addToFavourite"
