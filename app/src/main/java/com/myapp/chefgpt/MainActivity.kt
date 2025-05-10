@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         val llmInference = LlmInference.createFromOptions(this, taskOptions)
 
 
-        val model = AutoModel1.newInstance(this)
+        val model = AutoModel1.newInstance(this) //modello immagini
 
         val takePictureButton = findViewById<Button>(R.id.takePictureButton)
         val pickImageButton = findViewById<Button>(R.id.pickImageButton)

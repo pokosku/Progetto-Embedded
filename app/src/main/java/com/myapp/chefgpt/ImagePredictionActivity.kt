@@ -10,13 +10,18 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.Manifest
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.myapp.chefgpt.ml.AutoModel1
+import org.tensorflow.lite.support.image.TensorImage
 import java.io.File
+
 
 class ImagePredictionActivity : AppCompatActivity() {
 
@@ -25,24 +30,35 @@ class ImagePredictionActivity : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var imageUri: Uri
 
+    private lateinit var imageBitmap : Bitmap
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val model = AutoModel1.newInstance(this) //caricamento modello immagini
+
         setContentView(R.layout.activity_imageprediction)
-        val string = "zavagay"
         val takePictureButton = findViewById<Button>(R.id.openCamera)
         val pickImageButton = findViewById<Button>(R.id.openGallery)
+        val predictButton = findViewById<Button>(R.id.predictButton)
+        val foodName= findViewById<TextView>(R.id.foodName)
+
+        val imageView = findViewById<ImageView>(R.id.imageView)
+
 
         val buttonToRecipeResult: Button=findViewById(R.id.toRecipeResult)
         buttonToRecipeResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeResultActivity::class.java)
-            intent.putExtra("foodname",string)
-            startActivity(intent)
+            try{
+            intent.putExtra("foodname",foodName.text)
+            intent.putExtra("foodimage",imageUri.toString())
+            startActivity(intent)}
+            catch (e: UninitializedPropertyAccessException){
+                foodName.text="Select an image first!!"
+            }
         }
 
-        val imageView = findViewById<ImageView>(R.id.imageView)
 
-        var imageBitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888)
 
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
@@ -65,7 +81,7 @@ class ImagePredictionActivity : AppCompatActivity() {
         pickImageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val imageUri = result.data?.data
+                    imageUri = result.data?.data!!
                     imageView.setImageURI(imageUri)
                 }
             }
@@ -79,6 +95,14 @@ class ImagePredictionActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
             pickImageLauncher.launch(intent)
+        }
+
+        predictButton.setOnClickListener{
+            try{
+            foodName.text=imageClassification(imageView.drawable, model)
+            }catch (e: NullPointerException){
+                foodName.text="Select an image first!!"
+            }
         }
 
 
@@ -99,6 +123,21 @@ class ImagePredictionActivity : AppCompatActivity() {
             launchCamera()
         } else {
             permissionLauncher.launch(permission)
+        }
+    }
+
+    private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
+        try{
+            val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
+            imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
+            val input = TensorImage.fromBitmap(imageBitmap)
+            val outputs = model.process(input)
+            val probability = outputs.probabilityAsCategoryList
+            val best = (probability.maxByOrNull { it.score })!!.label
+
+            return best
+        }catch (e: NullPointerException){
+            return "Select an image first"
         }
     }
 
