@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+  <ImageView
+      android:id="@+id/imageView"
+      android:layout_width="304dp"
+      android:layout_height="300dp"
+      android:layout_marginTop="32dp"
+      android:background="#CCCCCC"
+      android:scaleType="centerCrop" />
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/constraintLayout"
+      android:layout_width="match_parent"
+      android:layout_height="122dp">
+
+    <Button
+        android:id="@+id/openGallery"
+        android:layout_width="130dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="32dp"
+        android:text="Gallery"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/openCamera"
+        android:layout_width="130dp"
+        android:layout_height="65dp"
+        android:layout_marginEnd="32dp"
+        android:text="Camera"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+  <TextView
+      android:id="@+id/foodName"
+      android:layout_width="269dp"
+      android:layout_height="87dp"
+      android:textSize="20sp"
+      android:gravity="center"
+      android:text="TextView" />
+
+  <Button
+      android:id="@+id/toRecipeResult"
+      android:layout_width="130dp"
+      android:layout_height="65dp"
+      android:textSize="20sp"
+      android:text="Recipe" />
+</LinearLayout>
