@@ -85,7 +85,7 @@ class ImagePredictionActivity : AppCompatActivity() {
 
     }
 
-    private fun  launchCamera(){
+    private fun launchCamera(){
         val photoFile = File.createTempFile("photo",".jpg",cacheDir).apply {
             createNewFile()
             deleteOnExit()
