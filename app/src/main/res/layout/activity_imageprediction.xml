@@ -13,7 +13,7 @@
       android:layout_width="304dp"
       android:layout_height="300dp"
       android:layout_marginTop="32dp"
-      android:background="#CCCCCC"
+      app:srcCompat="@drawable/empty"
       android:scaleType="centerCrop" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +22,7 @@
       android:layout_height="122dp">
 
     <Button
-        android:id="@+id/openGallery"
+        android:id="@+id/openFavorites"
         android:layout_width="130dp"
         android:layout_height="65dp"
         android:layout_marginStart="32dp"
