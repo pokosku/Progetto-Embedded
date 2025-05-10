@@ -48,7 +48,7 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         val buttonToRecipeResult: Button=findViewById(R.id.toRecipeResult)
         buttonToRecipeResult.setOnClickListener{ view->
-            val intent= Intent(view.context,RecipeResultActivity::class.java)
+            val intent= Intent(view.context,RecipeLoadingActivity::class.java)
             try{
             intent.putExtra("foodname",foodName.text)
             intent.putExtra("foodimage",imageUri.toString())
