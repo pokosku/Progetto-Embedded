@@ -144,7 +144,6 @@ class ImagePredictionActivity : AppCompatActivity() {
             val outputs = model.process(input)
             val probability = outputs.probabilityAsCategoryList
             val best = (probability.maxByOrNull { it.score })!!.label
-
             return best
         }catch (e: NullPointerException){
             return "Select an image first"

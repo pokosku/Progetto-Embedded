@@ -39,23 +39,26 @@ class RecipeLoadingActivity : AppCompatActivity(){
 
                 intent.putExtra("imageURI",imageUriString)
                 intent.putExtra("inference_result", result)
+                //passo anche il foodname per propagarlo alla favoriteRecipesActivity
+                intent.putExtra("foodname", foodName)
                 startActivity(intent)
                 finish() // chiude la schermata di caricamento
             }
         }
 
         private fun runInference(foodname : String): String {
-            // Set the configuration options for the LLM Inference task
+            // Inizializzazione delle opzioni per l'inferenza LLM
             val taskOptions = LlmInferenceOptions.builder()
                 .setModelPath("/data/local/tmp/llm/gemma3-1B-it-int4.task")
                 .setMaxTopK(64)
                 .setPreferredBackend(LlmInference.Backend.CPU)
                 .build()
 
-            // Create an instance of the LLM Inference task
+            // Creazione di un istanza di LlmInference utilizzando le opzioni specificate
             val llmInference = LlmInference.createFromOptions(this, taskOptions)
 
-            val output : String = llmInference.generateResponse("Give me the recipe for $foodname, without adding anything else")
+            //TODO: scegliere un prompt giusto per i separatori (parsing di ingredienti e step)
+            val output : String = llmInference.generateResponse("Give me the recipe for $foodname, do not add any other words")
             return output
         }
     }
