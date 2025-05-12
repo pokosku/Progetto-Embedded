@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         val toImagePredictionButton = findViewById<Button>(R.id.toImagePredictionButton)
         val toFavorites = findViewById<Button>(R.id.openFavorites)
         val toHistory = findViewById<Button>(R.id.openHistory)
