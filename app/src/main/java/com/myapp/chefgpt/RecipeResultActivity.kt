@@ -29,11 +29,9 @@ class RecipeResultActivity : AppCompatActivity(){
 
         textView.text=recipeResult
 
-        toFavoriteRecipesBtn.setOnClickListener {view ->
-            val intent = Intent(view.context, FavoriteRecipesActivity::class.java)
-            intent.putExtra("recipe", recipeResult)
-            intent.putExtra("foodname", foodName)
-            startActivity(intent)
+        //TODO qui il bottone deve solamente aggiungere ai preferiti, non deve aprire i preferiti
+        toFavoriteRecipesBtn.setOnClickListener {
+
         }
     }
 }

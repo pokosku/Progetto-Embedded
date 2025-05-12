@@ -38,7 +38,7 @@
         android:id="@+id/addToFavourite"
         android:layout_width="wrap_content"
         android:layout_height="71dp"
-        android:text="Favourite"
+        android:text="Add to favourite"
         android:textSize="20sp"
         app:icon="@drawable/stella"
         app:iconSize="40dp"
