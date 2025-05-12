@@ -35,7 +35,7 @@ class ImagePredictionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var loadImage: Boolean = false
+        var loadedImage: Boolean = false
 
         val model = AutoModel1.newInstance(this) //caricamento modello immagini
 
@@ -52,16 +52,21 @@ class ImagePredictionActivity : AppCompatActivity() {
         val buttonToRecipeResult: Button=findViewById(R.id.toRecipeResult)
         buttonToRecipeResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeLoadingActivity::class.java)
-            if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
-                try{
-                    intent.putExtra("foodname",foodName.text)
-                    intent.putExtra("foodimage",imageUri.toString())
-                    startActivity(intent)}
-                catch (e: UninitializedPropertyAccessException){
-                    foodName.text="Select an image first!!"
+            if(!loadedImage){
+                foodName.text="Select an image first!!"
+            }
+            else{
+                if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
+                    try{
+                        intent.putExtra("foodname",foodName.text)
+                        intent.putExtra("foodimage",imageUri.toString())
+                        startActivity(intent)}
+                    catch (e: UninitializedPropertyAccessException){
+                        foodName.text="Select an image first!!"
+                    }
+                }else{
+                    foodName.text="Press predict first!!"
                 }
-            }else{
-                foodName.text="Press predict first!!"
             }
         }
 
@@ -79,7 +84,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
                 if (success) {
                     imageView.setImageURI(imageUri)
-                    loadImage=true
+                    loadedImage=true
                 }else{
                     Log.e("CameraError","Image not saved")
                 }
@@ -91,7 +96,7 @@ class ImagePredictionActivity : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK) {
                     imageUri = result.data?.data!!
                     imageView.setImageURI(imageUri)
-                    loadImage=true
+                    loadedImage=true
                 }
             }
 
@@ -107,7 +112,7 @@ class ImagePredictionActivity : AppCompatActivity() {
         }
 
         predictButton.setOnClickListener{
-            if(loadImage) {
+            if(loadedImage) {
                 foodName.text = imageClassification(imageView.drawable, model)
             }else{
                 foodName.text="Select an image first!!"
