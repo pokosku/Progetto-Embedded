@@ -17,5 +17,6 @@ data class Recipe(
 
     //TODO: metodo per parsare gli steps
     fun parseSteps(stepsString: String) {
+
     }
 }
