@@ -6,31 +6,43 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/tablecloth2"
     android:gravity="center">
-    <include layout="@layout/toolbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 
 
-    <Space
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="83dp" />
+        android:layout_height="45dp">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/settings" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="294dp"
-        app:srcCompat="@drawable/logo" />
+        android:layout_height="350dp"
+        app:srcCompat="@drawable/logo2" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="269dp">
+        android:layout_height="336dp">
+
 
         <Button
             android:id="@+id/openHistory"
             android:layout_width="180dp"
             android:layout_height="70dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="16dp"
             android:text="History"
             android:textSize="18sp"
             app:icon="@drawable/pergamena"
@@ -45,13 +57,15 @@
             android:id="@+id/openFavorites"
             android:layout_width="180dp"
             android:layout_height="70dp"
+            android:layout_marginBottom="36dp"
             android:text="Favorites"
             android:textSize="18sp"
-            app:icon="@drawable/stella"
+            app:icon="@drawable/star"
             app:iconSize="40dp"
             app:iconTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
