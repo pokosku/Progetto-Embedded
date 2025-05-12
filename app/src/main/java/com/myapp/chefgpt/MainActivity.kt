@@ -20,6 +20,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(view.context, ImagePredictionActivity::class.java)
             startActivity(intent)
         }
-
+        //TODO: icone per le altre schermate, barra e impostazioni
     }
 }
