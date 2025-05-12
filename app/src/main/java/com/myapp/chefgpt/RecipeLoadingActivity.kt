@@ -32,10 +32,10 @@ class RecipeLoadingActivity : AppCompatActivity(){
             // Avvia l’inferenza in background
             lifecycleScope.launch {
                 // Passa i risultati all'activity successiva
-                val intent = Intent(this@RecipeLoadingActivity, RecipeResultActivity::class.java)
                 val result = withContext(Dispatchers.Default) {
                     runInference(foodName) // metodo che richiama il tuo modello
                 }
+                val intent = Intent(this@RecipeLoadingActivity, RecipeResultActivity::class.java)
 
                 intent.putExtra("imageURI",imageUriString)
                 intent.putExtra("inference_result", result)
