@@ -1,27 +1,31 @@
 package com.myapp.chefgpt
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.myapp.chefgpt.utils.MyDatabase
+import androidx.lifecycle.ViewModelProvider
+import com.myapp.chefgpt.utils.RecipeDatabase
 import androidx.room.Room
 
 import com.myapp.chefgpt.utils.Recipe
+import com.myapp.chefgpt.utils.RecipeViewModel
 import java.util.Date
 
 
 class RecipeResultActivity : AppCompatActivity(){
-    companion object{
-        lateinit var database: MyDatabase
-    }
+
+    private lateinit var mRecipeViewModel: RecipeViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reciperesult)
+
+        mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
 
         val textView: TextView = findViewById<TextView>(R.id.textRecipe)
         val imageView: ImageView= findViewById<ImageView>(R.id.imageView)
@@ -40,23 +44,18 @@ class RecipeResultActivity : AppCompatActivity(){
         textView.text=recipeResult
 
 
-        //TODO qui il bottone deve solamente aggiungere ai preferiti, non deve aprire i preferiti
+        //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
-
-
-            database = Room.databaseBuilder(
-                applicationContext,
-                MyDatabase::class.java,
-                "recipes_database"
-            ).build()
             val recipe = Recipe(foodName!!, recipeResult, Date().toString())
-            database.recipeDao().insertAll(recipe)
+            insertToDatabase(recipe)
             Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
         }
 
     }
 
-
+    fun insertToDatabase(recipe: Recipe) {
+        mRecipeViewModel.addRecipe(recipe)
+    }
 
     fun removePrefixUntilIngredients(recipeString: String): String {
         val lines = recipeString.lines() // Dividi la stringa in righe
