@@ -1,5 +1,6 @@
 package com.myapp.chefgpt.utils
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -8,14 +9,14 @@ import androidx.room.Query
 @Dao
 interface RecipeDao {
     @Query("SELECT * FROM recipe")
-    fun getAll(): List<Recipe>
+    fun getAll(): LiveData<List<Recipe>>
 
     @Query("SELECT * FROM recipe WHERE name LIKE :name LIMIT 1")
-    fun findByName(name: String): Recipe
+    suspend fun findByName(name: String): Recipe
 
     @Insert
-    fun insertAll(vararg recipes: Recipe)
+    suspend fun insert(recipe: Recipe)
 
     @Delete
-    fun delete(recipe: Recipe)
+    suspend fun delete(recipe: Recipe)
 }
