@@ -47,6 +47,7 @@ class RecipeResultActivity : AppCompatActivity(){
         //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
             val recipe = Recipe(foodName!!, recipeResult, Date().toString())
+            insertToDatabase(recipe)
             Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
         }
 
@@ -54,7 +55,6 @@ class RecipeResultActivity : AppCompatActivity(){
 
     fun insertToDatabase(recipe: Recipe) {
         mRecipeViewModel.addRecipe(recipe)
-
     }
 
     fun removePrefixUntilIngredients(recipeString: String): String {
