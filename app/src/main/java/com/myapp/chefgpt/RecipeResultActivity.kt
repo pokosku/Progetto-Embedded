@@ -2,7 +2,9 @@ package com.myapp.chefgpt
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -51,6 +53,16 @@ class RecipeResultActivity : AppCompatActivity(){
             Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
         }
 
+
+        val toolbarView = findViewById<View>(R.id.toolbar)
+
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+        settingsButton.setOnClickListener{}
     }
     //TODO: gestire vincolo chiave primaria
     fun insertToDatabase(recipe: Recipe) {
