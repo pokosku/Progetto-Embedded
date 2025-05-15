@@ -12,6 +12,8 @@ import android.widget.ImageView
 import android.Manifest
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,32 +45,10 @@ class ImagePredictionActivity : AppCompatActivity() {
         val takePictureButton = findViewById<Button>(R.id.openCamera)
         val pickImageButton = findViewById<Button>(R.id.openFavorites)
         val predictButton = findViewById<Button>(R.id.predictButton)
+        val buttonToRecipeResult: Button=findViewById(R.id.toRecipeResult)
         val foodName= findViewById<TextView>(R.id.foodName)
 
         val imageView = findViewById<ImageView>(R.id.imageView)
-
-
-
-        val buttonToRecipeResult: Button=findViewById(R.id.toRecipeResult)
-        buttonToRecipeResult.setOnClickListener{ view->
-            val intent= Intent(view.context,RecipeLoadingActivity::class.java)
-            if(!loadedImage){
-                foodName.text="Select an image first!!"
-            }
-            else{
-                if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
-                    try{
-                        intent.putExtra("foodname",foodName.text)
-                        intent.putExtra("foodimage",imageUri.toString())
-                        startActivity(intent)}
-                    catch (e: UninitializedPropertyAccessException){
-                        foodName.text="Select an image first!!"
-                    }
-                }else{
-                    foodName.text="Press predict first!!"
-                }
-            }
-        }
 
 
 
@@ -119,7 +99,36 @@ class ImagePredictionActivity : AppCompatActivity() {
             }
         }
 
+        buttonToRecipeResult.setOnClickListener{ view->
+            val intent= Intent(view.context,RecipeLoadingActivity::class.java)
+            if(!loadedImage){
+                foodName.text="Select an image first!!"
+            }
+            else{
+                if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
+                    try{
+                        intent.putExtra("foodname",foodName.text)
+                        intent.putExtra("foodimage",imageUri.toString())
+                        startActivity(intent)}
+                    catch (e: UninitializedPropertyAccessException){
+                        foodName.text="Select an image first!!"
+                    }
+                }else{
+                    foodName.text="Press predict first!!"
+                }
+            }
+        }
 
+
+        val toolbarView = findViewById<View>(R.id.toolbar)
+
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+        settingsButton.setOnClickListener{}
 
     }
 
