@@ -52,7 +52,7 @@ class RecipeResultActivity : AppCompatActivity(){
         }
 
     }
-
+    //TODO: gestire vincolo chiave primaria
     fun insertToDatabase(recipe: Recipe) {
         mRecipeViewModel.addRecipe(recipe)
     }
