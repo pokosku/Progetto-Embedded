@@ -24,7 +24,17 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun delete(recipe: Recipe) {
+    fun deleteRecipe(recipe: Recipe) {
+        viewModelScope.launch (Dispatchers.IO){
+            repository.deleteRecipe(recipe)
+        }
+    }
 
+    fun findRecipe(name: String): Recipe {
+        var recipe : Recipe? = null
+        viewModelScope.launch {
+            recipe = repository.findRecipe(name)
+        }
+        return recipe!!
     }
 }

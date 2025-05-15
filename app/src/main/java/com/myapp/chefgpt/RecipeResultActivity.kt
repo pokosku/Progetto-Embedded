@@ -64,7 +64,7 @@ class RecipeResultActivity : AppCompatActivity(){
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
         settingsButton.setOnClickListener{}
     }
-
+    //TODO: gestire vincolo chiave primaria
     fun insertToDatabase(recipe: Recipe) {
         mRecipeViewModel.addRecipe(recipe)
     }
