@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application) {
-    private val getAll : LiveData<List<Recipe>>
+    val getAll : LiveData<List<Recipe>>
     private val repository : RecipeRepository
     init{
         val recipeDao = RecipeDatabase.getDatabase(application).recipeDao()
