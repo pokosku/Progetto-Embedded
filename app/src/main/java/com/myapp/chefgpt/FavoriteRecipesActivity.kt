@@ -1,6 +1,8 @@
 package com.myapp.chefgpt
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,17 @@ class FavoriteRecipesActivity : AppCompatActivity() {
 
 
         recyclerView = findViewById<RecyclerView>(R.id.recipeRecyclerView)
+
+
+        val toolbarView = findViewById<View>(R.id.toolbar)
+
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+        settingsButton.setOnClickListener{}
     }
 
     //TODO: Implementare la RecyclerView o altro per gestire i preferiti
