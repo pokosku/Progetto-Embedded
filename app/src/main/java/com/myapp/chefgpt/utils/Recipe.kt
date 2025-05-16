@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "recipe")
 data class Recipe(
     @PrimaryKey val name: String,
-    @ColumnInfo(name = "description") val description: String,
+    @ColumnInfo(name = "description") var description: String,
     @ColumnInfo(name = "creation_date") val creationDate: String,
 )
 

@@ -46,14 +46,22 @@ class RecipeResultActivity : AppCompatActivity(){
 
         //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
-            val recipe = Recipe(foodName!!, recipeResult, Date().toString())
+            val recipe = Recipe(foodName!!, recipeResult, getCreationDate())
             insertToDatabase(recipe)
             Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
         }
 
     }
+
+    fun getCreationDate() : String{
+        val now = Date()
+        val formatter = java.text.SimpleDateFormat("dd/MM/yyyy")
+        return formatter.format(now)
+
+    }
     //TODO: gestire vincolo chiave primaria
     fun insertToDatabase(recipe: Recipe) {
+        recipe.description = removePrefixUntilIngredients(recipe.description)
         mRecipeViewModel.addRecipe(recipe)
     }
 
