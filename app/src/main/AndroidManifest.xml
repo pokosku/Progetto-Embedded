@@ -49,7 +49,8 @@
         </activity>
         <activity android:name=".RecipeResultActivity" >
         </activity>
-
+        <activity android:name=".RecipeReadingActivity" >
+        </activity>
         <uses-native-library
             android:name="libOpenCL.so"
             android:required="false" />

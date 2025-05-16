@@ -20,16 +20,21 @@ class FavoriteRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_recipes)
 
-
-        val recipeAdapter = RecipeAdapter()
         val recyclerView : RecyclerView = findViewById(R.id.recipe_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = recipeAdapter
 
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
+        val recipeAdapter = RecipeAdapter(emptyList<Recipe>(),mRecipeViewModel)
+
         mRecipeViewModel.getAll.observe(this, Observer { recipe ->
             recipeAdapter.setData(recipe)
         })
+
+        recyclerView.adapter = recipeAdapter
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+
+
 
         //TODO: sistemare grafica recyclerview
     }
