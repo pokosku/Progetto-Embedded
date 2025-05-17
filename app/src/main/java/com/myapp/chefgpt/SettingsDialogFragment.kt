@@ -1,5 +1,6 @@
 package com.myapp.chefgpt
 
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,6 +13,13 @@ import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 
 class SettingsDialogFragment : DialogFragment() {
+
+    var onDismissListener: (() -> Unit)? = null
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        onDismissListener?.invoke()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
