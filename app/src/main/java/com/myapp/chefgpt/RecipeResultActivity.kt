@@ -1,7 +1,6 @@
 package com.myapp.chefgpt
 
-import android.database.sqlite.SQLiteConstraintException
-import android.database.sqlite.SQLiteException
+
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -10,16 +9,15 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.myapp.chefgpt.utils.RecipeDatabase
-import androidx.room.Room
+
 
 import com.myapp.chefgpt.utils.Recipe
 import com.myapp.chefgpt.utils.RecipeViewModel
+import io.noties.markwon.Markwon
 import java.util.Date
 
 
@@ -42,15 +40,19 @@ class RecipeResultActivity : AppCompatActivity(){
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         val imageUriString = intent.getStringExtra("imageURI")
-        var recipeResult = intent.getStringExtra("inference_result")
-        recipeResult = removePrefixUntilIngredients(recipeResult!!)
+        var recipeResult = intent.getStringExtra("inference_result")!!
 
         val foodName = intent.getStringExtra("foodname")
 
         val imageUri = Uri.parse(imageUriString)
         imageView.setImageURI(imageUri)
 
-        textView.text=recipeResult
+
+        val rawMarkdown = fixNumberedMarkdownList(recipeResult)
+        val fixedMarkdown = fixNumberedMarkdownList(rawMarkdown)
+        val markwon = Markwon.create(this)
+        markwon.setMarkdown(textView, fixedMarkdown)
+        //textView.text=recipeResult
 
         mRecipeViewModel.findRecipe(foodName!!)
 
@@ -68,7 +70,8 @@ class RecipeResultActivity : AppCompatActivity(){
                 builder.setPositiveButton("Yes") { _, _ ->
                     insertToDatabase(newRecipe)
                 }
-                builder.setNegativeButton("No") { _, _ -> }
+                builder.setNegativeButton("No") { _, _ ->
+                    toFavoriteRecipesBtn.setEnabled(true) }
                 builder.setTitle(newRecipe.name)
                 builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites. Do you want to overwrite it?")
                 builder.create().show()
@@ -94,16 +97,37 @@ class RecipeResultActivity : AppCompatActivity(){
         }
     }
 
+    //TODO: spostare questo in una classe visto che lo dobbiamo usare anche in RecipeReadingActivity
+    fun fixNumberedMarkdownList(markdown: String): String {
+        val lines = markdown.lines()
+        val result = StringBuilder()
+        val numberedItemRegex = Regex("^\\d+\\.\\s+.*")
+        var inList = false
+
+        for (i in lines.indices) {
+            val line = lines[i]
+            if (line.matches(numberedItemRegex)) {
+                inList = true
+                result.appendLine(line)
+            } else if (inList && line.isNotBlank()) {
+                // Se siamo dentro una lista numerata e la riga non inizia con "n. ", la indentiamo
+                result.appendLine("   $line")
+            } else {
+                inList = false
+                result.appendLine(line)
+            }
+        }
+
+        return result.toString()
+    }
+
     fun getCreationDate() : String{
         val now = Date()
         val formatter = java.text.SimpleDateFormat("dd/MM/yyyy")
         return formatter.format(now)
 
     }
-    //TODO: gestire vincolo chiave primaria
     fun insertToDatabase(recipe: Recipe) {
-
-        //recipe.description = removePrefixUntilIngredients(recipe.description)
         mRecipeViewModel.addRecipe(recipe)
     }
 
