@@ -50,6 +50,9 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         val imageView = findViewById<ImageView>(R.id.imageView)
 
+        val toolbarView = findViewById<View>(R.id.toolbar)
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
 
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -120,16 +123,18 @@ class ImagePredictionActivity : AppCompatActivity() {
         }
 
 
-        val toolbarView = findViewById<View>(R.id.toolbar)
-
-        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
-        settingsButton.setOnClickListener{}
-
+        settingsButton.setOnClickListener{
+            settingsButton.isEnabled = false
+            val dialog = SettingsDialogFragment()
+            dialog.onDismissListener = {
+                settingsButton.isEnabled = true
+            }
+            dialog.show(supportFragmentManager, "settings_dialog")
+        }
     }
 
     private fun  launchCamera(){
