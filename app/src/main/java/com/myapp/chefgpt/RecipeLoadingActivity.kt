@@ -25,9 +25,10 @@ class RecipeLoadingActivity : AppCompatActivity(){
             val foodName = intent.getStringExtra("foodname")!!
             loadingImageView = findViewById(R.id.loadingGif)
 
+            // Mostra la GIF di inferenza
+            showPerformingInferenceGif()
+
             lifecycleScope.launch {
-                // Mostra la GIF di caricamento del modello
-                showLoadingModelGif()
 
                 // Carica il modello in background
                 llmInference = withContext(Dispatchers.Default) {
@@ -35,8 +36,6 @@ class RecipeLoadingActivity : AppCompatActivity(){
                 }
 
                 if (llmInference != null) {
-                    // Mostra la GIF di inferenza
-                    showPerformingInferenceGif()
 
                     // Esegui l'inferenza solo se il modello è stato caricato con successo
                     val result = withContext(Dispatchers.Default) {
@@ -72,16 +71,9 @@ class RecipeLoadingActivity : AppCompatActivity(){
     }
     private fun runInference(foodname : String): String {
         return llmInference?.generateResponse("Give me the recipe for $foodname" +
-                    " in the simplest way possible. . ") ?: "Error loading model"
+                    " in not so many words") ?: "Error loading model"
     }
 
-    // Metodo per mostrare la GIF di caricamento del modello
-    private fun showLoadingModelGif() {
-        Glide.with(this)
-            .asGif()
-            .load(R.drawable.loading_model) // Sostituisci con il nome del tuo file gif
-            .into(loadingImageView)
-    }
     private fun showPerformingInferenceGif() {
         Glide.with(this)
             .asGif()
