@@ -3,6 +3,7 @@ package com.myapp.chefgpt
 import android.os.Bundle
 import android.content.Intent
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.myapp.chefgpt.utils.Recipe
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         val toImagePredictionButton = findViewById<Button>(R.id.toImagePredictionButton)
         val toFavorites = findViewById<Button>(R.id.openFavorites)
         val toHistory = findViewById<Button>(R.id.openHistory)
+        val settingsButton = findViewById<ImageButton>(R.id.settings)
 
 
         toImagePredictionButton.setOnClickListener{ view ->
@@ -29,5 +31,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(view.context, FavoriteRecipesActivity::class.java)
             startActivity(intent)
         }
+
+        settingsButton.setOnClickListener{
+            val dialog = SettingsDialogFragment()
+            dialog.show(supportFragmentManager, "settings_dialog")
+        }
     }
+
 }
