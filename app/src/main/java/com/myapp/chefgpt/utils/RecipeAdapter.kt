@@ -29,25 +29,23 @@ class RecipeAdapter(private var recipeList : List<Recipe> =
             creationDateTextView.text = recipe.creationDate
 
             deleteButton.setOnClickListener {
-                mRecipeViewModel.deleteRecipe(recipe)
-                Toast.makeText(itemView.context, "Recipe deleted", Toast.LENGTH_SHORT).show()
+                val builder = AlertDialog.Builder(itemView.context)
+                builder.setPositiveButton("Yes") {_, _ ->
+                    mRecipeViewModel.deleteRecipe(recipe)
+                }
+                builder.setNegativeButton("No"){ _,_ -> }
+                builder.setTitle(recipe.name)
+                builder.setMessage("Do you want to delete this recipe?")
+                builder.create().show()
             }
 
             //TODO: va aumentata la hitbox del nome, mi viene un cancro a premerla
             recipeNameTextView.setOnClickListener {
-                //Messaggio di conferma per la lettura della ricetta
-                val builder = AlertDialog.Builder(itemView.context)
-                builder.setPositiveButton("Yes") {_, _ ->
-                    readRecipe(recipe)
-                }
-                builder.setNegativeButton("No"){ _,_ -> }
-                builder.setTitle(recipe.name)
-                builder.setMessage("Do you want to read this recipe?")
-                builder.create().show()
+                readRecipe(recipe)
             }
 
         }
-        fun readRecipe(recipe: Recipe){
+        private fun readRecipe(recipe: Recipe){
             val intent = Intent(itemView.context, RecipeReadingActivity::class.java)
             intent.putExtra("recipe_name", recipe.name)
             intent.putExtra("recipe_desc", recipe.description)

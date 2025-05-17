@@ -12,7 +12,7 @@ class RecipeRepository(private val recipeDao: RecipeDao) {
     suspend fun deleteRecipe(recipe: Recipe){
         recipeDao.delete(recipe)
     }
-    suspend fun findRecipe(name: String): Recipe {
+    suspend fun findRecipe(name: String): Recipe? {
         return recipeDao.findByName(name)
     }
 }

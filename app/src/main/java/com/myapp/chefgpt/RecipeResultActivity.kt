@@ -1,5 +1,7 @@
 package com.myapp.chefgpt
 
+import android.database.sqlite.SQLiteConstraintException
+import android.database.sqlite.SQLiteException
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -9,7 +11,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.myapp.chefgpt.utils.RecipeDatabase
 import androidx.room.Room
@@ -48,9 +52,25 @@ class RecipeResultActivity : AppCompatActivity(){
 
         //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
-            val recipe = Recipe(foodName!!, recipeResult, getCreationDate())
-            insertToDatabase(recipe)
-            Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+            val newRecipe = Recipe(foodName!!, recipeResult, getCreationDate())
+
+            mRecipeViewModel.findRecipe(foodName)
+            mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
+                if (recipe != null) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setPositiveButton("Yes") { _, _ ->
+                        insertToDatabase(newRecipe)
+                    }
+                    builder.setNegativeButton("No") { _, _ -> }
+                    builder.setTitle(recipe.name)
+                    builder.setMessage("A recipe for ${recipe.name} already exists in your favorites. Do you want to overwrite it?")
+                    builder.create().show()
+                } else {
+                    insertToDatabase(newRecipe)
+                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+                }
+            })
+
         }
 
 
@@ -77,6 +97,9 @@ class RecipeResultActivity : AppCompatActivity(){
         mRecipeViewModel.addRecipe(recipe)
     }
 
+//    fun findByNameInDatabase(name: String): Recipe? {
+//        return mRecipeViewModel.findRecipe(name)
+//    }
     fun removePrefixUntilIngredients(recipeString: String): String {
         val lines = recipeString.lines() // Dividi la stringa in righe
 

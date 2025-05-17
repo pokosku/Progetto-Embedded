@@ -3,6 +3,7 @@ package com.myapp.chefgpt
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -50,8 +51,12 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     startActivity(intent)
                     finish()
                 } else {
-                    // TODO: Gestisci l'errore di caricamento del modello
-
+                    // Gestione errore di caricamento del modello
+                    AlertDialog.Builder(this@RecipeLoadingActivity)
+                        .setTitle("Error")
+                        .setMessage("Failed to load the model.")
+                        .setPositiveButton("OK", null)
+                        .show()
                 }
             }
         }
