@@ -9,10 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
+    private var areSettingsOpened = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
         val toImagePredictionButton = findViewById<Button>(R.id.toImagePredictionButton)
         val toFavorites = findViewById<Button>(R.id.openFavorites)
@@ -31,9 +32,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         settingsButton.setOnClickListener{
-            val dialog = SettingsDialogFragment()
-            dialog.show(supportFragmentManager, "settings_dialog")
+            if(!areSettingsOpened){
+                areSettingsOpened = true
+                val dialog = SettingsDialogFragment()
+                dialog.onDismissListener = {
+                    areSettingsOpened = false
+                }
+                dialog.show(supportFragmentManager, "settings_dialog")
+            }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        areSettingsOpened = false
     }
 
 }
