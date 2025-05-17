@@ -13,7 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val toImagePredictionButton = findViewById<Button>(R.id.toImagePredictionButton)
         val toFavorites = findViewById<Button>(R.id.openFavorites)
         val toHistory = findViewById<Button>(R.id.openHistory)
@@ -31,9 +30,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         settingsButton.setOnClickListener{
+            settingsButton.isEnabled = false
             val dialog = SettingsDialogFragment()
+            dialog.onDismissListener = {
+                settingsButton.isEnabled = true
+            }
             dialog.show(supportFragmentManager, "settings_dialog")
         }
     }
-
 }

@@ -2,15 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
   <include layout="@layout/toolbar"
-      android:id="@+id/toolbar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
+      android:id="@+id/toolbar" />
 
   <ImageView
       android:id="@+id/imageView"
@@ -23,7 +21,8 @@
   <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/constraintLayout"
       android:layout_width="match_parent"
-      android:layout_height="122dp">
+      android:layout_height="0dp"
+      android:layout_weight="3">
 
     <Button
         android:id="@+id/openFavorites"
@@ -58,7 +57,8 @@
   <Button
       android:id="@+id/predictButton"
       android:layout_width="wrap_content"
-      android:layout_height="56dp"
+      android:layout_height="0dp"
+      android:layout_weight="1"
       android:text="Predict"
       android:textSize="20sp"
       app:icon="@drawable/predict"
@@ -68,7 +68,8 @@
   <TextView
       android:id="@+id/foodName"
       android:layout_width="269dp"
-      android:layout_height="87dp"
+      android:layout_height="0dp"
+      android:layout_weight="2"
       android:gravity="center"
       android:text="Select an image"
       android:textSize="20sp" />
@@ -76,7 +77,9 @@
   <Button
       android:id="@+id/toRecipeResult"
       android:layout_width="wrap_content"
-      android:layout_height="65dp"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:layout_marginBottom="25dp"
       android:text="Recipe"
       android:textSize="20sp"
       app:icon="@drawable/recipes"

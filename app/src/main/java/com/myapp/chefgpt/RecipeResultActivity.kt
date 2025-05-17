@@ -37,6 +37,10 @@ class RecipeResultActivity : AppCompatActivity(){
         val imageView: ImageView= findViewById<ImageView>(R.id.imageView)
         val toFavoriteRecipesBtn : Button = findViewById<Button>(R.id.addToFavourite)
 
+        val toolbarView = findViewById<View>(R.id.toolbar)
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+
         val imageUriString = intent.getStringExtra("imageURI")
         var recipeResult = intent.getStringExtra("inference_result")
         recipeResult = removePrefixUntilIngredients(recipeResult!!)
@@ -76,15 +80,18 @@ class RecipeResultActivity : AppCompatActivity(){
         }
 
 
-        val toolbarView = findViewById<View>(R.id.toolbar)
-
-        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
-        settingsButton.setOnClickListener{}
+        settingsButton.setOnClickListener{
+            settingsButton.isEnabled = false
+            val dialog = SettingsDialogFragment()
+            dialog.onDismissListener = {
+                settingsButton.isEnabled = true
+            }
+            dialog.show(supportFragmentManager, "settings_dialog")
+        }
     }
 
     fun getCreationDate() : String{
