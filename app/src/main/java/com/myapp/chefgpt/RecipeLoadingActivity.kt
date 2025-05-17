@@ -45,7 +45,6 @@ class RecipeLoadingActivity : AppCompatActivity(){
                         .setPositiveButton("OK", null)
                         .show()
                 }
-
             }
 
 
@@ -106,6 +105,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
                         intent.putExtra("inference_result", resultBuilder.toString())
                         intent.putExtra("foodname", foodName)
                         startActivity(intent)
+                        finish()
                     }
                 }
             })
