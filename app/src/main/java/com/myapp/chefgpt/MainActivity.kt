@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private var areSettingsOpened = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,20 +30,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         settingsButton.setOnClickListener{
-            if(!areSettingsOpened){
-                areSettingsOpened = true
-                val dialog = SettingsDialogFragment()
-                dialog.onDismissListener = {
-                    areSettingsOpened = false
-                }
-                dialog.show(supportFragmentManager, "settings_dialog")
+            settingsButton.isEnabled = false
+            val dialog = SettingsDialogFragment()
+            dialog.onDismissListener = {
+                settingsButton.isEnabled = true
             }
+            dialog.show(supportFragmentManager, "settings_dialog")
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        areSettingsOpened = false
-    }
-
 }
