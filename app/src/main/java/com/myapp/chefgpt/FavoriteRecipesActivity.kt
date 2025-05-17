@@ -20,6 +20,10 @@ class FavoriteRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_recipes)
 
+        val toolbarView = findViewById<View>(R.id.toolbar)
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+
         val recyclerView : RecyclerView = findViewById(R.id.recipe_recycler_view)
 
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
@@ -33,10 +37,21 @@ class FavoriteRecipesActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        backButton.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        settingsButton.setOnClickListener{
+            settingsButton.isEnabled = false
+            val dialog = SettingsDialogFragment()
+            dialog.onDismissListener = {
+                settingsButton.isEnabled = true
+            }
+            dialog.show(supportFragmentManager, "settings_dialog")
+        }
 
 
-
-        //TODO: sistemare grafica recyclerview
+        //TODO: sistemare grafica recyclerview (aggiungere il vector asset "delete")
     }
 
 }
