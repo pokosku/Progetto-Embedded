@@ -43,34 +43,36 @@ class RecipeResultActivity : AppCompatActivity(){
 
         val foodName = intent.getStringExtra("foodname")
 
-
         val imageUri = Uri.parse(imageUriString)
         imageView.setImageURI(imageUri)
 
         textView.text=recipeResult
 
+        mRecipeViewModel.findRecipe(foodName!!)
 
         //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
             val newRecipe = Recipe(foodName!!, recipeResult, getCreationDate())
-
-            mRecipeViewModel.findRecipe(foodName)
+            var overwritable = false
             mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
                 if (recipe != null) {
-                    val builder = AlertDialog.Builder(this)
-                    builder.setPositiveButton("Yes") { _, _ ->
-                        insertToDatabase(newRecipe)
-                    }
-                    builder.setNegativeButton("No") { _, _ -> }
-                    builder.setTitle(recipe.name)
-                    builder.setMessage("A recipe for ${recipe.name} already exists in your favorites. Do you want to overwrite it?")
-                    builder.create().show()
-                } else {
-                    insertToDatabase(newRecipe)
-                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+                    overwritable = true
                 }
             })
-
+            if(overwritable) {
+                val builder = AlertDialog.Builder(this)
+                builder.setPositiveButton("Yes") { _, _ ->
+                    insertToDatabase(newRecipe)
+                }
+                builder.setNegativeButton("No") { _, _ -> }
+                builder.setTitle(newRecipe.name)
+                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites. Do you want to overwrite it?")
+                builder.create().show()
+            } else {
+                insertToDatabase(newRecipe)
+                Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+            }
+            toFavoriteRecipesBtn.setEnabled(false)
         }
 
 
@@ -93,13 +95,11 @@ class RecipeResultActivity : AppCompatActivity(){
     }
     //TODO: gestire vincolo chiave primaria
     fun insertToDatabase(recipe: Recipe) {
-        recipe.description = removePrefixUntilIngredients(recipe.description)
+
+        //recipe.description = removePrefixUntilIngredients(recipe.description)
         mRecipeViewModel.addRecipe(recipe)
     }
 
-//    fun findByNameInDatabase(name: String): Recipe? {
-//        return mRecipeViewModel.findRecipe(name)
-//    }
     fun removePrefixUntilIngredients(recipeString: String): String {
         val lines = recipeString.lines() // Dividi la stringa in righe
 
