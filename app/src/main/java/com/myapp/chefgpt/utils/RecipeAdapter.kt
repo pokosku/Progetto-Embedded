@@ -32,6 +32,7 @@ class RecipeAdapter(private var recipeList : List<Recipe> =
                 val builder = AlertDialog.Builder(itemView.context)
                 builder.setPositiveButton("Yes") {_, _ ->
                     mRecipeViewModel.deleteRecipe(recipe)
+                    Toast.makeText(itemView.context, "Recipe deleted", Toast.LENGTH_SHORT).show()
                 }
                 builder.setNegativeButton("No"){ _,_ -> }
                 builder.setTitle(recipe.name)
