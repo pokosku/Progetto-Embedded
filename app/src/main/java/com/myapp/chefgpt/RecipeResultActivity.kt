@@ -13,11 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.myapp.chefgpt.utils.MarkdownHelper
 
 
 import com.myapp.chefgpt.utils.Recipe
 import com.myapp.chefgpt.utils.RecipeViewModel
-import io.noties.markwon.Markwon
 import java.util.Date
 
 
@@ -47,12 +47,11 @@ class RecipeResultActivity : AppCompatActivity(){
         val imageUri = Uri.parse(imageUriString)
         imageView.setImageURI(imageUri)
 
+        val recipeResultWithTitle = "# $foodName \n $recipeResult"
 
-        val rawMarkdown = fixNumberedMarkdownList(recipeResult)
-        val fixedMarkdown = fixNumberedMarkdownList(rawMarkdown)
-        val markwon = Markwon.create(this)
-        markwon.setMarkdown(textView, fixedMarkdown)
-        //textView.text=recipeResult
+
+        MarkdownHelper(recipeResultWithTitle, this, textView).format()
+
 
         mRecipeViewModel.findRecipe(foodName!!)
 
@@ -73,7 +72,7 @@ class RecipeResultActivity : AppCompatActivity(){
                 builder.setNegativeButton("No") { _, _ ->
                     toFavoriteRecipesBtn.setEnabled(true) }
                 builder.setTitle(newRecipe.name)
-                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites. Do you want to overwrite it?")
+                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
                 builder.create().show()
             } else {
                 insertToDatabase(newRecipe)
@@ -131,25 +130,4 @@ class RecipeResultActivity : AppCompatActivity(){
         mRecipeViewModel.addRecipe(recipe)
     }
 
-    fun removePrefixUntilIngredients(recipeString: String): String {
-        val lines = recipeString.lines() // Dividi la stringa in righe
-
-        // Trova l'indice della riga che contiene "**ingredients**"
-        val ingredientsLineIndex = lines.indexOfFirst { it.trim().equals("**ingredients**", ignoreCase = true) }
-
-        // Se "**ingredients**" non viene trovato, restituisci la stringa originale o un messaggio di errore
-        if (ingredientsLineIndex == -1) {
-            return recipeString
-        }
-
-        // Unisci le righe a partire dalla riga *successiva* a "**ingredients**"
-        // Se ingredientsLineIndex è l'ultimo indice, non ci sono righe successive
-        if (ingredientsLineIndex + 1 >= lines.size) {
-            return "" // Non c'è contenuto dopo "**ingredients**"
-        }
-
-        // Prendi la sottolista di righe a partire dall'indice successivo e uniscile
-        val contentAfterIngredients = lines.subList(ingredientsLineIndex + 1, lines.size)
-        return contentAfterIngredients.joinToString(separator = "\n") // Unisci le righe con newline
-    }
 }

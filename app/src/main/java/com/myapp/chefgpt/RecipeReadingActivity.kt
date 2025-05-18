@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.myapp.chefgpt.utils.MarkdownHelper
 
 class RecipeReadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +20,8 @@ class RecipeReadingActivity : AppCompatActivity() {
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         titleTextView.text = intent.getStringExtra("recipe_name")
-        descriptionTextView.text = intent.getStringExtra("recipe_desc")
+        val recipeResult = intent.getStringExtra("recipe_desc")
+        MarkdownHelper(recipeResult!!, this, descriptionTextView).format()
 
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()

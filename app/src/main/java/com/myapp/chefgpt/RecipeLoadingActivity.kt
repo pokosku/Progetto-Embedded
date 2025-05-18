@@ -47,48 +47,16 @@ class RecipeLoadingActivity : AppCompatActivity(){
                 }
             }
 
-
-
-
-
-//            lifecycleScope.launch {
-//
-//                // Carica il modello in background
-//                llmInference = withContext(Dispatchers.Default) {
-//                    loadLlmModel()
-//                }
-//                if (llmInference != null) {
-//
-//                    // Esegui l'inferenza solo se il modello è stato caricato con successo
-//                    val result = withContext(Dispatchers.Default) {
-//                        runInference(foodName)
-//                    }
-//
-//                    // Passa i risultati all'activity successiva
-//                    val intent = Intent(this@RecipeLoadingActivity, RecipeResultActivity::class.java)
-//                    intent.putExtra("imageURI",imageUriString)
-//                    intent.putExtra("inference_result", result)
-//                    intent.putExtra("foodname", foodName)
-//                    startActivity(intent)
-//                    finish()
-//                } else {
-//                    // Gestione errore di caricamento del modello
-//                    AlertDialog.Builder(this@RecipeLoadingActivity)
-//                        .setTitle("Error")
-//                        .setMessage("Failed to load the model.")
-//                        .setPositiveButton("OK", null)
-//                        .show()
-//                }
-//            }
         }
 
     private fun startInference(foodName: String, imageUriString: String){
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val maxTokens = 300  // Definisci il numero massimo di token previsto
+        val maxTokens = 350  // Definisci il numero massimo di token previsto
         var currentTokens = 0
         val resultBuilder = StringBuilder()
         llmInference?.generateResponseAsync(
-            "Give me the recipe for $foodName, no need for introduction, focus only on ingredients and instructions",
+            "Write only the ingredients and instructions to make [$foodName].\n" +
+                    "No introduction, no title, no conclusion, no notes. Keep it short and clear.",
             ProgressListener<String>{ partialResult, done ->
 
                 currentTokens++
@@ -117,7 +85,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     .setMaxTopK(64)
                     .setPreferredBackend(LlmInference.Backend.CPU)
                     //TODO : verificare maxTokens
-                    .setMaxTokens(300)
+                    .setMaxTokens(350)
                     .build()
                 LlmInference.createFromOptions(this,taskOptions)
         }catch (e: Exception){
@@ -125,10 +93,6 @@ class RecipeLoadingActivity : AppCompatActivity(){
             null
         }
 
-    }
-    private fun runInference(foodname : String): String {
-        return llmInference?.generateResponse("Give me the recipe for $foodname" +
-                    " in not so many words") ?: "Error loading model"
     }
 
     private fun showPerformingInferenceGif() {
