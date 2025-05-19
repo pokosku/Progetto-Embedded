@@ -20,10 +20,12 @@ import com.myapp.chefgpt.utils.Recipe
 import com.myapp.chefgpt.utils.RecipeViewModel
 import java.util.Date
 
+private const val KEY_FAVORITE_BUTTON_ENABLED = "favorite_button_enabled_state"
 
 class RecipeResultActivity : AppCompatActivity(){
 
     private lateinit var mRecipeViewModel: RecipeViewModel
+    private lateinit var toFavoriteRecipesBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +33,18 @@ class RecipeResultActivity : AppCompatActivity(){
 
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
 
-        val textView: TextView = findViewById<TextView>(R.id.textRecipe)
-        val imageView: ImageView= findViewById<ImageView>(R.id.imageView)
-        val toFavoriteRecipesBtn : Button = findViewById<Button>(R.id.addToFavourite)
+        val textView: TextView = findViewById(R.id.textRecipe)
+        val imageView: ImageView= findViewById(R.id.imageView)
+        toFavoriteRecipesBtn = findViewById(R.id.addToFavourite)
 
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+
+        if (savedInstanceState != null) {
+            val isFavoriteButtonEnabled = savedInstanceState.getBoolean(KEY_FAVORITE_BUTTON_ENABLED, true)
+            toFavoriteRecipesBtn.isEnabled = isFavoriteButtonEnabled
+        }
 
         val imageUriString = intent.getStringExtra("imageURI")
         var recipeResult = intent.getStringExtra("inference_result")!!
@@ -59,18 +66,25 @@ class RecipeResultActivity : AppCompatActivity(){
         toFavoriteRecipesBtn.setOnClickListener {
             val newRecipe = Recipe(foodName!!, recipeResult, getCreationDate())
             var overwritable = false
-            mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
+            val observer = Observer<Recipe?> { recipe ->
                 if (recipe != null) {
                     overwritable = true
                 }
-            })
+            }
+            mRecipeViewModel.foundRecipe.observe(this, observer)
+            toFavoriteRecipesBtn.isEnabled = false
+
             if(overwritable) {
                 val builder = AlertDialog.Builder(this)
                 builder.setPositiveButton("Yes") { _, _ ->
                     insertToDatabase(newRecipe)
                 }
                 builder.setNegativeButton("No") { _, _ ->
-                    toFavoriteRecipesBtn.setEnabled(true) }
+                    toFavoriteRecipesBtn.isEnabled = true
+                }
+                builder.setOnDismissListener {
+                    mRecipeViewModel.foundRecipe.removeObserver(observer)
+                }
                 builder.setTitle(newRecipe.name)
                 builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
                 builder.create().show()
@@ -78,7 +92,7 @@ class RecipeResultActivity : AppCompatActivity(){
                 insertToDatabase(newRecipe)
                 Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
             }
-            toFavoriteRecipesBtn.setEnabled(false)
+            mRecipeViewModel.foundRecipe.removeObserver(observer)
         }
 
 
@@ -94,6 +108,11 @@ class RecipeResultActivity : AppCompatActivity(){
             }
             dialog.show(supportFragmentManager, "settings_dialog")
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_FAVORITE_BUTTON_ENABLED, toFavoriteRecipesBtn.isEnabled)
     }
 
     //TODO: spostare questo in una classe visto che lo dobbiamo usare anche in RecipeReadingActivity

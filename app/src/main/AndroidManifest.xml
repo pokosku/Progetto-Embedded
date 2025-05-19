@@ -45,7 +45,8 @@
         </activity>
         <activity android:name=".ImagePredictionActivity" >
         </activity>
-        <activity android:name=".RecipeLoadingActivity" >
+        <activity android:name=".RecipeLoadingActivity"
+            android:screenOrientation="nosensor">
         </activity>
         <activity android:name=".RecipeResultActivity" >
         </activity>
