@@ -1,6 +1,7 @@
 package com.myapp.chefgpt
 
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -51,7 +52,19 @@ class SettingsDialogFragment : DialogFragment() {
         okButton.setOnClickListener {
             dismiss()
         }
+
         //TODO : salvare la preferenza
+        //legge se è impostato da sistema il tema scuso
+        val systemTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (systemTheme == Configuration.UI_MODE_NIGHT_YES) {
+            //mette il bottone già impostato
+            darkmodeButton.isChecked = true
+        }else{
+            // lo lascia attivabile
+            darkmodeButton.isChecked = false
+        }
+
+        //cambia la modalità di tema
         darkmodeButton.setOnCheckedChangeListener{ buttonView, isChecked ->
             if (isChecked) {
                 // se è attivato metti la darkmode
