@@ -88,7 +88,8 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     .setMaxTokens(350)
                     .build()
                 LlmInference.createFromOptions(this,taskOptions)
-            }catch (e: Exception){
+            }
+        catch (e: Exception){
                 e.printStackTrace()
                 null
             }
