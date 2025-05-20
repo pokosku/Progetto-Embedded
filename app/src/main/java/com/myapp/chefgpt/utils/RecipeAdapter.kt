@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -22,7 +23,7 @@ class RecipeAdapter(private var recipeList : List<Recipe> =
     class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val recipeNameTextView: TextView = itemView.findViewById(R.id.recipe_name)
         private val creationDateTextView: TextView = itemView.findViewById(R.id.creation_date)
-        private val deleteButton: Button = itemView.findViewById(R.id.delete_recipe_btn)
+        private val deleteButton: ImageButton = itemView.findViewById(R.id.delete_recipe_btn)
 
         fun bind(recipe: Recipe, mRecipeViewModel: RecipeViewModel){
             recipeNameTextView.text = recipe.name
@@ -32,6 +33,7 @@ class RecipeAdapter(private var recipeList : List<Recipe> =
                 val builder = AlertDialog.Builder(itemView.context)
                 builder.setPositiveButton("Yes") {_, _ ->
                     mRecipeViewModel.deleteRecipe(recipe)
+                    Toast.makeText(itemView.context, "Recipe deleted", Toast.LENGTH_SHORT).show()
                 }
                 builder.setNegativeButton("No"){ _,_ -> }
                 builder.setTitle(recipe.name)

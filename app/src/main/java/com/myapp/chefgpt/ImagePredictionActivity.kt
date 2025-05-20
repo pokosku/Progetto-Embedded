@@ -34,14 +34,18 @@ class ImagePredictionActivity : AppCompatActivity() {
 
     private lateinit var imageBitmap : Bitmap
 
+    companion object {
+        private const val KEY_IMAGE_URI = "key_image_uri"
+        private const val KEY_FOOD_NAME_TEXT = "key_food_name_text"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_imageprediction)
 
-        var loadedImage: Boolean = false
-
+        var loadedImage= false
         val model = AutoModel1.newInstance(this) //caricamento modello immagini
 
-        setContentView(R.layout.activity_imageprediction)
         val takePictureButton = findViewById<Button>(R.id.openCamera)
         val pickImageButton = findViewById<Button>(R.id.openFavorites)
         val predictButton = findViewById<Button>(R.id.predictButton)
@@ -54,6 +58,15 @@ class ImagePredictionActivity : AppCompatActivity() {
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
+        if (savedInstanceState != null) {
+            // Ripristina l'URI dell'immagine
+            savedInstanceState.getString(KEY_IMAGE_URI)?.let {
+                imageUri = Uri.parse(it)
+                imageView.setImageURI(imageUri)
+            }
+            // Ripristina il testo della TextView
+            foodName.text = savedInstanceState.getString(KEY_FOOD_NAME_TEXT)
+        }
 
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
@@ -104,6 +117,7 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         buttonToRecipeResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeLoadingActivity::class.java)
+            //TODO sistemare controlli stringhe perchè dopo aver aggiunto il recupero dal cambio di orientamento non fa andare avanti
             if(!loadedImage){
                 foodName.text="Select an image first!!"
             }
@@ -158,6 +172,7 @@ class ImagePredictionActivity : AppCompatActivity() {
     private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
         try{
             val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
+            //TODO controllare eccezione bitmap troppo grande
             imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
             val input = TensorImage.fromBitmap(imageBitmap)
             val outputs = model.process(input)
@@ -168,5 +183,17 @@ class ImagePredictionActivity : AppCompatActivity() {
             return "Select an image first"
         }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // Salva l'URI dell'immagine se presente
+        if (::imageUri.isInitialized) {
+            outState.putString(KEY_IMAGE_URI, imageUri.toString())
+        }
+        // Salva il testo della TextView
+        val foodName = findViewById<TextView>(R.id.foodName)
+        outState.putString(KEY_FOOD_NAME_TEXT, foodName.text.toString())
+    }
+
 
 }

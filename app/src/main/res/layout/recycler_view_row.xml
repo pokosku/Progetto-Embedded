@@ -18,32 +18,40 @@
             android:layout_height="83dp">
 
             <TextView
+                android:id="@+id/recipe_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="TextView"
+                android:padding="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/guideLine"
+                app:layout_constraintGuide_percent="0.4"/>
+            <TextView
                 android:id="@+id/creation_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/delete_recipe_btn"
-                app:layout_constraintHorizontal_bias="0.469"
-                app:layout_constraintStart_toEndOf="@+id/recipe_name"
+                app:layout_constraintStart_toEndOf="@+id/guideLine"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/recipe_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="TextView"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
+            <ImageButton
                 android:id="@+id/delete_recipe_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="36dp"
-                android:text="Button"
+                android:src="@drawable/bin"
+                android:background="@null"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -1,6 +1,7 @@
 package com.myapp.chefgpt
 
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 
 class SettingsDialogFragment : DialogFragment() {
@@ -31,10 +34,11 @@ class SettingsDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val darkmodeButton = view.findViewById<SwitchCompat>(R.id.dmodeButton)
         val backgroundLayout = view.findViewById<FrameLayout>(R.id.backgroundLayout)
         val contentLayout = view.findViewById<LinearLayout>(R.id.contentLayout)
         val okButton = view.findViewById<Button>(R.id.okButton)
+
 
         //Chiudi se clicchi FUORI dal contenuto
         backgroundLayout.setOnClickListener {
@@ -48,7 +52,30 @@ class SettingsDialogFragment : DialogFragment() {
         okButton.setOnClickListener {
             dismiss()
         }
+
+        //TODO : salvare la preferenza
+        //legge se è impostato da sistema il tema scuso
+        val systemTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (systemTheme == Configuration.UI_MODE_NIGHT_YES) {
+            //mette il bottone già impostato
+            darkmodeButton.isChecked = true
+        }else{
+            // lo lascia attivabile
+            darkmodeButton.isChecked = false
+        }
+
+        //cambia la modalità di tema
+        darkmodeButton.setOnCheckedChangeListener{ buttonView, isChecked ->
+            if (isChecked) {
+                // se è attivato metti la darkmode
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                // sennò segui il tema di default del sistema
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+        }
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -59,4 +86,10 @@ class SettingsDialogFragment : DialogFragment() {
         // Sfondo semi-trasparente nero (overlay)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
+
+        // Salva la preferenza
+//        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+//        prefs.edit().putString("theme", themePref).apply()
+//
+
 }

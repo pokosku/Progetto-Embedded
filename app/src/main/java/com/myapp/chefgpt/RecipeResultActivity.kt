@@ -13,17 +13,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.myapp.chefgpt.utils.MarkdownHelper
 
 
 import com.myapp.chefgpt.utils.Recipe
 import com.myapp.chefgpt.utils.RecipeViewModel
-import io.noties.markwon.Markwon
 import java.util.Date
 
+private const val KEY_FAVORITE_BUTTON_ENABLED = "favorite_button_enabled_state"
 
 class RecipeResultActivity : AppCompatActivity(){
 
     private lateinit var mRecipeViewModel: RecipeViewModel
+    private lateinit var toFavoriteRecipesBtn : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +33,18 @@ class RecipeResultActivity : AppCompatActivity(){
 
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
 
-        val textView: TextView = findViewById<TextView>(R.id.textRecipe)
-        val imageView: ImageView= findViewById<ImageView>(R.id.imageView)
-        val toFavoriteRecipesBtn : Button = findViewById<Button>(R.id.addToFavourite)
+        val textView: TextView = findViewById(R.id.textRecipe)
+        val imageView: ImageView= findViewById(R.id.imageView)
+        toFavoriteRecipesBtn = findViewById(R.id.addToFavourite)
 
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+
+        if (savedInstanceState != null) {
+            val isFavoriteButtonEnabled = savedInstanceState.getBoolean(KEY_FAVORITE_BUTTON_ENABLED, true)
+            toFavoriteRecipesBtn.isEnabled = isFavoriteButtonEnabled
+        }
 
         val imageUriString = intent.getStringExtra("imageURI")
         var recipeResult = intent.getStringExtra("inference_result")!!
@@ -47,12 +54,11 @@ class RecipeResultActivity : AppCompatActivity(){
         val imageUri = Uri.parse(imageUriString)
         imageView.setImageURI(imageUri)
 
+        val recipeResultWithTitle = "# $foodName \n $recipeResult"
 
-        val rawMarkdown = fixNumberedMarkdownList(recipeResult)
-        val fixedMarkdown = fixNumberedMarkdownList(rawMarkdown)
-        val markwon = Markwon.create(this)
-        markwon.setMarkdown(textView, fixedMarkdown)
-        //textView.text=recipeResult
+
+        MarkdownHelper(recipeResultWithTitle, this, textView).format()
+
 
         mRecipeViewModel.findRecipe(foodName!!)
 
@@ -60,26 +66,33 @@ class RecipeResultActivity : AppCompatActivity(){
         toFavoriteRecipesBtn.setOnClickListener {
             val newRecipe = Recipe(foodName!!, recipeResult, getCreationDate())
             var overwritable = false
-            mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
+            val observer = Observer<Recipe?> { recipe ->
                 if (recipe != null) {
                     overwritable = true
                 }
-            })
+            }
+            mRecipeViewModel.foundRecipe.observe(this, observer)
+            toFavoriteRecipesBtn.isEnabled = false
+
             if(overwritable) {
                 val builder = AlertDialog.Builder(this)
                 builder.setPositiveButton("Yes") { _, _ ->
                     insertToDatabase(newRecipe)
                 }
                 builder.setNegativeButton("No") { _, _ ->
-                    toFavoriteRecipesBtn.setEnabled(true) }
+                    toFavoriteRecipesBtn.isEnabled = true
+                }
+                builder.setOnDismissListener {
+                    mRecipeViewModel.foundRecipe.removeObserver(observer)
+                }
                 builder.setTitle(newRecipe.name)
-                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites. Do you want to overwrite it?")
+                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
                 builder.create().show()
             } else {
                 insertToDatabase(newRecipe)
                 Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
             }
-            toFavoriteRecipesBtn.setEnabled(false)
+            mRecipeViewModel.foundRecipe.removeObserver(observer)
         }
 
 
@@ -95,6 +108,11 @@ class RecipeResultActivity : AppCompatActivity(){
             }
             dialog.show(supportFragmentManager, "settings_dialog")
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_FAVORITE_BUTTON_ENABLED, toFavoriteRecipesBtn.isEnabled)
     }
 
     //TODO: spostare questo in una classe visto che lo dobbiamo usare anche in RecipeReadingActivity
@@ -131,25 +149,4 @@ class RecipeResultActivity : AppCompatActivity(){
         mRecipeViewModel.addRecipe(recipe)
     }
 
-    fun removePrefixUntilIngredients(recipeString: String): String {
-        val lines = recipeString.lines() // Dividi la stringa in righe
-
-        // Trova l'indice della riga che contiene "**ingredients**"
-        val ingredientsLineIndex = lines.indexOfFirst { it.trim().equals("**ingredients**", ignoreCase = true) }
-
-        // Se "**ingredients**" non viene trovato, restituisci la stringa originale o un messaggio di errore
-        if (ingredientsLineIndex == -1) {
-            return recipeString
-        }
-
-        // Unisci le righe a partire dalla riga *successiva* a "**ingredients**"
-        // Se ingredientsLineIndex è l'ultimo indice, non ci sono righe successive
-        if (ingredientsLineIndex + 1 >= lines.size) {
-            return "" // Non c'è contenuto dopo "**ingredients**"
-        }
-
-        // Prendi la sottolista di righe a partire dall'indice successivo e uniscile
-        val contentAfterIngredients = lines.subList(ingredientsLineIndex + 1, lines.size)
-        return contentAfterIngredients.joinToString(separator = "\n") // Unisci le righe con newline
-    }
 }

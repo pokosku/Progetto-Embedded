@@ -17,6 +17,7 @@
         android:textStyle="bold"
         android:layout_gravity="center"
         android:textSize="40dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toTopOf="@+id/recipe_scroll_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +30,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/recipe_description_reading"
