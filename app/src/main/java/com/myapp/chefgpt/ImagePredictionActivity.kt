@@ -126,6 +126,7 @@ class ImagePredictionActivity : AppCompatActivity() {
                     try{
                         intent.putExtra("foodname",foodName.text)
                         intent.putExtra("foodimage",imageUri.toString())
+                        intent.putExtra("is_random_recipe",false)
                         startActivity(intent)}
                     catch (e: UninitializedPropertyAccessException){
                         foodName.text="Select an image first!!"

@@ -32,6 +32,10 @@ class MainActivity : AppCompatActivity() {
         //TODO: gestire la ricetta random
         toRandomRecipe.setOnClickListener{view ->
             val intent = Intent(view.context, RecipeLoadingActivity::class.java)
+            intent.putExtra("is_random_recipe", true)
+            intent.putExtra("foodname", "")
+            intent.putExtra("foodimage","")
+            startActivity(intent)
         }
         settingsButton.setOnClickListener{
             settingsButton.isEnabled = false

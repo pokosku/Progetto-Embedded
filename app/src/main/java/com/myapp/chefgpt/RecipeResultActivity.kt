@@ -42,9 +42,17 @@ class RecipeResultActivity : AppCompatActivity(){
         val imageUriString = intent.getStringExtra("imageURI")
         var recipeResult = intent.getStringExtra("inference_result")!!
         val foodName = intent.getStringExtra("foodname")
+        val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
 
         val imageUri = Uri.parse(imageUriString)
-        imageView.setImageURI(imageUri)
+
+        // se è una ricetta casuale viene caricata un immagine placeholder
+        if(isRandomRecipe){
+            imageView.setImageResource(R.drawable.empty)
+        }
+        else{
+            imageView.setImageURI(imageUri)
+        }
 
         val recipeResultWithTitle = "# $foodName \n $recipeResult"
 
@@ -56,8 +64,9 @@ class RecipeResultActivity : AppCompatActivity(){
 
         //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
-            val newRecipe = Recipe(foodName!!, recipeResult, getCreationDate())
+            val newRecipe = Recipe(foodName!!, recipeResult, generateCreationDate())
             var overwritable = false
+
             mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
                 if (recipe != null) {
                     overwritable = true
@@ -96,7 +105,7 @@ class RecipeResultActivity : AppCompatActivity(){
     }
 
 
-    private fun getCreationDate() : String{
+    private fun generateCreationDate() : String{
         val now = Date()
         val formatter = java.text.SimpleDateFormat("dd/MM/yyyy")
         return formatter.format(now)
