@@ -1,4 +1,4 @@
-package com.myapp.chefgpt.utils
+package com.myapp.chefgpt.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

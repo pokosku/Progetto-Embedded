@@ -1,6 +1,7 @@
 package com.myapp.chefgpt
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -16,20 +17,29 @@ import com.bumptech.glide.Glide
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import com.google.mediapipe.tasks.genai.llminference.LlmInference.LlmInferenceOptions
 import com.google.mediapipe.tasks.genai.llminference.ProgressListener
+import com.myapp.chefgpt.ml.AutoModel1
 import kotlinx.coroutines.withContext
+import org.tensorflow.lite.support.image.TensorImage
+import kotlin.random.Random
 
 class RecipeLoadingActivity : AppCompatActivity(){
     private var llmInference: LlmInference? = null
     private lateinit var loadingImageView: ImageView
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_recipeloading)
 
-            val imageUriString = intent.getStringExtra("foodimage")!!
-            val foodName = intent.getStringExtra("foodname")!!
+            val imageUriString = intent.getStringExtra("foodimage")
+            var foodName = intent.getStringExtra("foodname")!!
+            val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
+
             loadingImageView = findViewById(R.id.loadingGif)
 
-            // Mostra la GIF di inferenza
+
+            if(isRandomRecipe){
+                foodName = generateRandomFoodname()
+            }
             showPerformingInferenceGif()
 
             lifecycleScope.launch {
@@ -37,7 +47,8 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     loadLlmModel()
                 }
                 if (llmInference != null) {
-                    startInference(foodName, imageUriString)
+                    startInference(foodName, imageUriString, isRandomRecipe)
+
                 } else {
                     AlertDialog.Builder(this@RecipeLoadingActivity)
                         .setTitle("Error")
@@ -46,12 +57,11 @@ class RecipeLoadingActivity : AppCompatActivity(){
                         .show()
                 }
             }
-
         }
 
-    private fun startInference(foodName: String, imageUriString: String){
+    private fun startInference(foodName: String, imageUriString: String?, isRandomRecipe : Boolean){
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val maxTokens = 350  // Definisci il numero massimo di token previsto
+        val maxTokens = 350
         var currentTokens = 0
         val resultBuilder = StringBuilder()
         llmInference?.generateResponseAsync(
@@ -69,14 +79,17 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     if (done) {
                         progressBar.progress = 100
                         val intent = Intent(this@RecipeLoadingActivity, RecipeResultActivity::class.java)
-                        intent.putExtra("imageURI",imageUriString)
+                        if(imageUriString != null)
+                            intent.putExtra("imageURI",imageUriString)
                         intent.putExtra("inference_result", resultBuilder.toString())
                         intent.putExtra("foodname", foodName)
+                        intent.putExtra("is_random_recipe", isRandomRecipe)
                         startActivity(intent)
                         finish()
                     }
                 }
             })
+
     }
     private fun loadLlmModel(): LlmInference? {
         return try {
@@ -95,10 +108,17 @@ class RecipeLoadingActivity : AppCompatActivity(){
             }
     }
 
+    private fun generateRandomFoodname() : String{
+        val model = AutoModel1.newInstance(this)
+        val shallowInput = TensorImage.fromBitmap(Bitmap.createBitmap(192,192,Bitmap.Config.ARGB_8888))
+        val outputs = model.process(shallowInput)
+        return outputs.probabilityAsCategoryList[Random.nextInt(2023)].label
+    }
+
     private fun showPerformingInferenceGif() {
         Glide.with(this)
             .asGif()
-            .load(R.drawable.performing_inference) // Sostituisci con il nome del tuo file gif
+            .load(R.drawable.performing_inference)
             .into(loadingImageView)
     }
     override fun onDestroy() {

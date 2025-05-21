@@ -126,6 +126,7 @@ class ImagePredictionActivity : AppCompatActivity() {
                     try{
                         intent.putExtra("foodname",foodName.text)
                         intent.putExtra("foodimage",imageUri.toString())
+                        intent.putExtra("is_random_recipe",false)
                         startActivity(intent)}
                     catch (e: UninitializedPropertyAccessException){
                         foodName.text="Select an image first!!"
@@ -168,7 +169,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             permissionLauncher.launch(permission)
         }
     }
-
+    //TODO: testare rimozione try catch
     private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
         try{
             val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
