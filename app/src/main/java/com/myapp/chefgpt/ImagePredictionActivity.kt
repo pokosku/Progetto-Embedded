@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.myapp.chefgpt.ml.AutoModel1
@@ -33,17 +34,18 @@ class ImagePredictionActivity : AppCompatActivity() {
     private lateinit var imageUri: Uri
 
     private lateinit var imageBitmap : Bitmap
+    private var loadedImage : Boolean = false
 
     companion object {
         private const val KEY_IMAGE_URI = "key_image_uri"
         private const val KEY_FOOD_NAME_TEXT = "key_food_name_text"
+        private const val KEY_LOADED_IMAGE = "loaded_image"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_imageprediction)
 
-        var loadedImage= false
         val model = AutoModel1.newInstance(this) //caricamento modello immagini
 
         val takePictureButton = findViewById<Button>(R.id.openCamera)
@@ -54,8 +56,9 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         val imageView = findViewById<ImageView>(R.id.imageView)
 
-        val toolbarView = findViewById<View>(R.id.toolbar)
-        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val toolbarView = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbarView)
+        //val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         if (savedInstanceState != null) {
@@ -64,6 +67,8 @@ class ImagePredictionActivity : AppCompatActivity() {
                 imageUri = Uri.parse(it)
                 imageView.setImageURI(imageUri)
             }
+            //Ripristina il boolean se l'immagine è già stata caricata oppure no
+            loadedImage = savedInstanceState.getBoolean(KEY_LOADED_IMAGE)
             // Ripristina il testo della TextView
             foodName.text = savedInstanceState.getString(KEY_FOOD_NAME_TEXT)
         }
@@ -138,7 +143,10 @@ class ImagePredictionActivity : AppCompatActivity() {
         }
 
 
-        backButton.setOnClickListener {
+//        backButton.setOnClickListener {
+//            onBackPressedDispatcher.onBackPressed()
+//        }
+        toolbarView.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
@@ -191,6 +199,8 @@ class ImagePredictionActivity : AppCompatActivity() {
         if (::imageUri.isInitialized) {
             outState.putString(KEY_IMAGE_URI, imageUri.toString())
         }
+        //Salva il boolean se l'immagine è già stata caricata oppure no
+        outState.putBoolean(KEY_LOADED_IMAGE,loadedImage)
         // Salva il testo della TextView
         val foodName = findViewById<TextView>(R.id.foodName)
         outState.putString(KEY_FOOD_NAME_TEXT, foodName.text.toString())

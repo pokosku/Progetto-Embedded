@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,8 +21,9 @@ class FavoriteRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_recipes)
 
-        val toolbarView = findViewById<View>(R.id.toolbar)
-        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val toolbarView = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbarView)
+        //val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         val recyclerView : RecyclerView = findViewById(R.id.recipe_recycler_view)
@@ -37,7 +39,10 @@ class FavoriteRecipesActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        backButton.setOnClickListener {
+//        backButton.setOnClickListener {
+//            onBackPressedDispatcher.onBackPressed()
+//        }
+        toolbarView.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 

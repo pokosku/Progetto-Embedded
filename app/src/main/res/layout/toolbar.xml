@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@android:color/transparent"
+    app:navigationIcon="@drawable/back"
     android:elevation="0dp">
 
     <RelativeLayout
@@ -14,15 +15,6 @@
         android:layout_alignParentEnd="true"
         android:padding="12dp">
 
-        <ImageButton
-            android:id="@+id/back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@android:color/holo_orange_light"
-            android:src="@drawable/back" />
 
         <ImageButton
             android:id="@+id/settings"
@@ -36,8 +28,8 @@
 
         <ImageView
             android:id="@+id/imagelogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:srcCompat="@drawable/name" />
 
     </RelativeLayout>

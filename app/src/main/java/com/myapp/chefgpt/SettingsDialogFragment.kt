@@ -1,5 +1,6 @@
 package com.myapp.chefgpt
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.graphics.Color
@@ -8,12 +9,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
+import java.util.Locale
 
 class SettingsDialogFragment : DialogFragment() {
 
@@ -34,11 +37,13 @@ class SettingsDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val darkmodeButton = view.findViewById<SwitchCompat>(R.id.dmodeButton)
+        //val darkmodeButton = view.findViewById<SwitchCompat>(R.id.dmodeButton)
         val backgroundLayout = view.findViewById<FrameLayout>(R.id.backgroundLayout)
         val contentLayout = view.findViewById<LinearLayout>(R.id.contentLayout)
         val okButton = view.findViewById<Button>(R.id.okButton)
 
+        val themeSpinner = view.findViewById<Spinner>(R.id.themeSpinner)
+        val languageSpinner = view.findViewById<Spinner>(R.id.languageSpinner)
 
         //Chiudi se clicchi FUORI dal contenuto
         backgroundLayout.setOnClickListener {
@@ -55,27 +60,89 @@ class SettingsDialogFragment : DialogFragment() {
 
         //TODO : salvare la preferenza
         //legge se è impostato da sistema il tema scuso
-        val systemTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (systemTheme == Configuration.UI_MODE_NIGHT_YES) {
-            //mette il bottone già impostato
-            darkmodeButton.isChecked = true
-        }else{
-            // lo lascia attivabile
-            darkmodeButton.isChecked = false
+//        val systemTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+//        if (systemTheme == Configuration.UI_MODE_NIGHT_YES) {
+//            //mette il bottone già impostato
+//            darkmodeButton.isChecked = true
+//        }else{
+//            // lo lascia attivabile
+//            darkmodeButton.isChecked = false
+//        }
+//
+//        //cambia la modalità di tema
+//        darkmodeButton.setOnCheckedChangeListener{ buttonView, isChecked ->
+//            if (isChecked) {
+//                // se è attivato metti la darkmode
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//            } else {
+//                // sennò segui il tema di default del sistema
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+//            }
+//        }
+
+        // Setta il valore iniziale dello spinner in base al tema salvato
+        val prefs = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val savedTheme = prefs.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
+        themeSpinner.setSelection(
+            when (savedTheme) {
+                AppCompatDelegate.MODE_NIGHT_NO -> 0
+                AppCompatDelegate.MODE_NIGHT_YES -> 1
+                else -> 2 // MODE_NIGHT_FOLLOW_SYSTEM
+            }
+        )
+
+        themeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedMode = when (position) {
+                    0 -> AppCompatDelegate.MODE_NIGHT_NO
+                    1 -> AppCompatDelegate.MODE_NIGHT_YES
+                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
+                if (selectedMode != savedTheme) {
+                    prefs.edit().putInt("selected_theme", selectedMode).apply()
+                    AppCompatDelegate.setDefaultNightMode(selectedMode)
+                    requireActivity().recreate()
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        //cambia la modalità di tema
-        darkmodeButton.setOnCheckedChangeListener{ buttonView, isChecked ->
-            if (isChecked) {
-                // se è attivato metti la darkmode
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                // sennò segui il tema di default del sistema
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        //per la lingua
+        val savedLanguage = prefs.getString("selected_language", "en")
+        val languages = resources.getStringArray(R.array.language_options)
+
+        val selectedLangIndex = when (savedLanguage) {
+            "it" -> languages.indexOf("Italiano")
+            else -> languages.indexOf("English")
+        }
+        languageSpinner.setSelection(selectedLangIndex)
+
+        languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val languageCode = when (position) {
+                    languages.indexOf("Italiano") -> "it"
+                    else -> "en"
+                }
+                if (languageCode != savedLanguage) {
+                    prefs.edit().putString("selected_language", languageCode).apply()
+                    changeAppLanguage(requireContext(), languageCode)
+                    requireActivity().recreate()
+                }
             }
+            override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
 
+    private fun changeAppLanguage(context: Context, languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+
+        val config = Configuration()
+        config.setLocale(locale)
+
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    }
 
     override fun onStart() {
         super.onStart()
@@ -87,7 +154,7 @@ class SettingsDialogFragment : DialogFragment() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
-        // Salva la preferenza
+    // Salva la preferenza
 //        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 //        prefs.edit().putString("theme", themePref).apply()
 //

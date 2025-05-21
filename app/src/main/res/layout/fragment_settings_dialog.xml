@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:id="@+id/contentLayout"
-        android:layout_width="300dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@android:color/white"
@@ -28,36 +28,47 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
             <TextView
-                android:id="@+id/TemaScuroText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dark Mode"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnOption1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="App theme"/>
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/dmodeButton"
-                android:layout_width="96dp"
-                android:layout_height="33dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <Spinner
+                android:id="@+id/themeSpinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:entries="@array/theme_options"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/btnOption2"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Opzione 2" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Language"/>
+
+            <Spinner
+                android:id="@+id/languageSpinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:entries="@array/language_options"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/okButton"

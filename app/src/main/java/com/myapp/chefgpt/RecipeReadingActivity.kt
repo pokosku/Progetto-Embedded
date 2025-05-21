@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.myapp.chefgpt.helpers.MarkdownHelper
 
 class RecipeReadingActivity : AppCompatActivity() {
@@ -15,15 +16,19 @@ class RecipeReadingActivity : AppCompatActivity() {
         val titleTextView= findViewById<TextView>(R.id.recipe_name_reading)
         val descriptionTextView = findViewById<TextView>(R.id.recipe_description_reading)
 
-        val toolbarView = findViewById<View>(R.id.toolbar)
-        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val toolbarView = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbarView)
+        //val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         titleTextView.text = intent.getStringExtra("recipe_name")
         val recipeResult = intent.getStringExtra("recipe_desc")
         MarkdownHelper(recipeResult!!, this, descriptionTextView).format()
 
-        backButton.setOnClickListener {
+//        backButton.setOnClickListener {
+//            onBackPressedDispatcher.onBackPressed()
+//        }
+        toolbarView.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
