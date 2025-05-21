@@ -31,7 +31,6 @@ class RecipeLoadingActivity : AppCompatActivity(){
 
             // Mostra la GIF di inferenza
             showPerformingInferenceGif()
-
             lifecycleScope.launch {
                 llmInference = withContext(Dispatchers.IO){
                     loadLlmModel()

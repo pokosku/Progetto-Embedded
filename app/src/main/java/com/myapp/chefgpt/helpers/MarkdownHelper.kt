@@ -1,4 +1,4 @@
-package com.myapp.chefgpt.utils
+package com.myapp.chefgpt.helpers
 
 import android.content.Context
 import android.widget.TextView

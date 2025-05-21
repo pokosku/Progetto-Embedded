@@ -8,9 +8,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.myapp.chefgpt.utils.Recipe
-import com.myapp.chefgpt.utils.RecipeAdapter
-import com.myapp.chefgpt.utils.RecipeViewModel
+import com.myapp.chefgpt.database.Recipe
+import com.myapp.chefgpt.database.RecipeAdapter
+import com.myapp.chefgpt.database.RecipeViewModel
 
 
 class FavoriteRecipesActivity : AppCompatActivity() {

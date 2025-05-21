@@ -168,7 +168,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             permissionLauncher.launch(permission)
         }
     }
-
+    //TODO: testare rimozione try catch
     private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
         try{
             val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)

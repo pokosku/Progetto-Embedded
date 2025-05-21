@@ -1,4 +1,4 @@
-package com.myapp.chefgpt.utils
+package com.myapp.chefgpt.database
 
 import android.content.Intent
 import android.view.LayoutInflater

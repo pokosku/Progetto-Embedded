@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         val toImagePredictionButton = findViewById<Button>(R.id.toImagePredictionButton)
         val toFavorites = findViewById<Button>(R.id.openFavorites)
-        val toHistory = findViewById<Button>(R.id.openHistory)
+        val toRandomRecipe = findViewById<Button>(R.id.randomRecipe)
         val settingsButton = findViewById<ImageButton>(R.id.settings)
 
 
@@ -29,6 +29,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //TODO: gestire la ricetta random
+        toRandomRecipe.setOnClickListener{view ->
+            val intent = Intent(view.context, RecipeLoadingActivity::class.java)
+        }
         settingsButton.setOnClickListener{
             settingsButton.isEnabled = false
             val dialog = SettingsDialogFragment()

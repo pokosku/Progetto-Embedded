@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.myapp.chefgpt.utils.MarkdownHelper
+import com.myapp.chefgpt.helpers.MarkdownHelper
 
 class RecipeReadingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
