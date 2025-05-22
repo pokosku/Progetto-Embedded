@@ -21,9 +21,8 @@ class FavoriteRecipesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_recipes)
 
-        val toolbarView = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbarView)
-        //val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val toolbarView = findViewById<View>(R.id.toolbar)
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         val recyclerView : RecyclerView = findViewById(R.id.recipe_recycler_view)
@@ -39,10 +38,7 @@ class FavoriteRecipesActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-//        backButton.setOnClickListener {
-//            onBackPressedDispatcher.onBackPressed()
-//        }
-        toolbarView.setNavigationOnClickListener {
+        backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 

@@ -36,9 +36,8 @@ class RecipeResultActivity : AppCompatActivity(){
         val imageView: ImageView= findViewById<ImageView>(R.id.imageView)
         val toFavoriteRecipesBtn : Button = findViewById<Button>(R.id.addToFavourite)
 
-        val toolbarView = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbarView)
-        //val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val toolbarView = findViewById<View>(R.id.toolbar)
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         val imageUriString = intent.getStringExtra("imageURI")
@@ -92,10 +91,7 @@ class RecipeResultActivity : AppCompatActivity(){
         }
 
 
-//        backButton.setOnClickListener {
-//            onBackPressedDispatcher.onBackPressed()
-//        }
-        toolbarView.setNavigationOnClickListener {
+        backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 

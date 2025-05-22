@@ -62,7 +62,7 @@
                 app:icon="@drawable/bowl"
                 app:iconSize="40dp"
                 app:iconTint="@null"
-                app:layout_constraintBottom_toTopOf="@+id/openHistory"
+                app:layout_constraintBottom_toTopOf="@+id/randomRecipe"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.503"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
                 app:layout_constraintVertical_bias="0.743" />
 
             <Button
-                android:id="@+id/openHistory"
+                android:id="@+id/randomRecipe"
                 android:layout_width="180dp"
                 android:layout_height="70dp"
                 android:layout_marginBottom="16dp"
