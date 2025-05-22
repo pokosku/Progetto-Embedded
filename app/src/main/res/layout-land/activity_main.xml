@@ -76,7 +76,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/RandomRecipe"
                 android:textSize="18sp"
-                app:icon="@drawable/pergamena"
+                app:icon="@drawable/dice"
                 app:iconSize="40dp"
                 app:iconTint="@null"
                 app:layout_constraintBottom_toTopOf="@+id/openFavorites"

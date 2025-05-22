@@ -87,7 +87,7 @@
         android:layout_height="76dp"
         android:layout_weight="2"
         android:gravity="center"
-        android:text="Select an image"
+        android:text="@string/SelectImage"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/toRecipeResult"
         app:layout_constraintEnd_toEndOf="parent"

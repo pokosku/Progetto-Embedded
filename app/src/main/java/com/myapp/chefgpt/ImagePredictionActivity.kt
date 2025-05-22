@@ -115,7 +115,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             if(loadedImage) {
                 foodName.text = imageClassification(imageView.drawable, model)
             }else{
-                foodName.text="Select an image first!!"
+                foodName.text=getString(R.string.ImageControl)
             }
         }
 
@@ -123,7 +123,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             val intent= Intent(view.context,RecipeLoadingActivity::class.java)
             //TODO sistemare controlli stringhe perchè dopo aver aggiunto il recupero dal cambio di orientamento non fa andare avanti
             if(!loadedImage){
-                foodName.text="Select an image first!!"
+                foodName.text=getString(R.string.ImageControl)
             }
             else{
                 if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
@@ -133,10 +133,10 @@ class ImagePredictionActivity : AppCompatActivity() {
                         intent.putExtra("is_random_recipe",false)
                         startActivity(intent)}
                     catch (e: UninitializedPropertyAccessException){
-                        foodName.text="Select an image first!!"
+                        foodName.text=getString(R.string.ImageControl)
                     }
                 }else{
-                    foodName.text="Press predict first!!"
+                    foodName.text=getString(R.string.PressPredictFirst)
                 }
             }
         }
