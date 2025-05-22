@@ -20,6 +20,11 @@ import java.util.Locale
 
 class SettingsDialogFragment : DialogFragment() {
 
+    companion object {
+        private const val THEME_KEY = "selected_theme"
+        private const val LANGUAGE_KEY = "selected_language"
+    }
+
     var onDismissListener: (() -> Unit)? = null
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -58,8 +63,8 @@ class SettingsDialogFragment : DialogFragment() {
         }
 
         // Setta il valore iniziale dello spinner in base al tema salvato
-        val prefs = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        val savedTheme = prefs.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val preferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val savedTheme = preferences.getInt(THEME_KEY, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
         themeSpinner.setSelection(
             when (savedTheme) {
@@ -77,7 +82,7 @@ class SettingsDialogFragment : DialogFragment() {
                     else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 }
                 if (selectedMode != savedTheme) {
-                    prefs.edit().putInt("selected_theme", selectedMode).apply()
+                    preferences.edit().putInt("selected_theme", selectedMode).apply()
                     AppCompatDelegate.setDefaultNightMode(selectedMode)
                     requireActivity().recreate()
                 }
@@ -86,23 +91,23 @@ class SettingsDialogFragment : DialogFragment() {
         }
 
         //per la lingua
-        val savedLanguage = prefs.getString("selected_language", "en")
-        val languages = resources.getStringArray(R.array.language_options)
+        val savedLanguage = preferences.getString(LANGUAGE_KEY, "en")
+        val arrayOfLanguages = resources.getStringArray(R.array.language_options)
 
         val selectedLangIndex = when (savedLanguage) {
-            "it" -> languages.indexOf("Italiano")
-            else -> languages.indexOf("English")
+            "it" -> arrayOfLanguages.indexOf("Italiano")
+            else -> arrayOfLanguages.indexOf("English")
         }
         languageSpinner.setSelection(selectedLangIndex)
 
         languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val languageCode = when (position) {
-                    languages.indexOf("Italiano") -> "it"
+                    arrayOfLanguages.indexOf("Italiano") -> "it"
                     else -> "en"
                 }
                 if (languageCode != savedLanguage) {
-                    prefs.edit().putString("selected_language", languageCode).apply()
+                    preferences.edit().putString(LANGUAGE_KEY, languageCode).apply()
                     changeAppLanguage(requireContext(), languageCode)
                     requireActivity().recreate()
                 }

@@ -9,12 +9,15 @@
     <string name="Camera">Camera</string>
     <string name="Predict">Predici</string>
     <string name="Recipe">Ricetta</string>
-    <!-- ImagePredictionActivity -->
     <string name="AddToFavourite">Aggiungi ai preferiti</string>
+    <!-- ImagePredictionActivity -->
     <string name="SelectImage">Seleziona un\'immagine</string>
     <string name="ImageControl">Seleziona un\'immagine prima!!</string>
     <string name="PressPredictFirst">Premi Predici prima!!</string>">
     <!-- SettingsDialogFragment -->
+    <string name="Settings">Impostazioni</string>
+    <string name="AppTheme">Tema dell\'app</string>
+    <string name="Language">Lingua</string>
     <string-array name="theme_options">
         <item>Chiaro</item>
         <item>Scuro</item>

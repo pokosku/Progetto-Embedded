@@ -13,6 +13,10 @@
     <string name="SelectImage">Select an image</string>"
     <string name="ImageControl">Select an image first!!</string>
     <string name="PressPredictFirst">Press predict first!!</string>"
+    <!-- SettingsDialogFragment -->
+    <string name="Settings">Settings</string>
+    <string name="AppTheme">App Theme</string>
+    <string name="Language">Language</string>
     
     <string-array name="theme_options">
         <item>Light</item>

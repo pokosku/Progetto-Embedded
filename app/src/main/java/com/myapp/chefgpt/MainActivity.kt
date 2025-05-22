@@ -13,14 +13,22 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val THEME_KEY = "selected_theme"
+        private const val LANGUAGE_KEY = "selected_language"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //le preferenze dell'app
-        val prefs = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        //val preferences = getPreferences(MODE_PRIVATE)
+        val preferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+
         //tema chiaro o scuro
-        val theme = prefs.getInt("selected_theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        val theme = preferences.getInt(THEME_KEY, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         AppCompatDelegate.setDefaultNightMode(theme)
+
         //lingua
-        val langCode = prefs.getString("selected_language", "en") ?: "en"
+        val langCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
         val locale = Locale(langCode)
         Locale.setDefault(locale)
         val config = Configuration()
