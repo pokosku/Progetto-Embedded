@@ -54,11 +54,27 @@
             android:layout_weight="1">
 
             <Button
+                android:id="@+id/toImagePredictionButton"
+                android:layout_width="217dp"
+                android:layout_height="75dp"
+                android:text="@string/DetectFood"
+                android:textSize="18sp"
+                app:icon="@drawable/bowl"
+                app:iconSize="40dp"
+                app:iconTint="@null"
+                app:layout_constraintBottom_toTopOf="@+id/openHistory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.743" />
+
+            <Button
                 android:id="@+id/openHistory"
                 android:layout_width="180dp"
                 android:layout_height="70dp"
                 android:layout_marginBottom="16dp"
-                android:text="History"
+                android:text="@string/RandomRecipe"
                 android:textSize="18sp"
                 app:icon="@drawable/pergamena"
                 app:iconSize="40dp"
@@ -73,7 +89,7 @@
                 android:layout_width="180dp"
                 android:layout_height="70dp"
                 android:layout_marginBottom="36dp"
-                android:text="Favorites"
+                android:text="@string/Favorites"
                 android:textSize="18sp"
                 app:icon="@drawable/star"
                 app:iconSize="40dp"
@@ -83,21 +99,6 @@
                 app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <Button
-                android:id="@+id/toImagePredictionButton"
-                android:layout_width="217dp"
-                android:layout_height="75dp"
-                android:text="Detect Food"
-                android:textSize="18sp"
-                app:icon="@drawable/bowl"
-                app:iconSize="40dp"
-                app:iconTint="@null"
-                app:layout_constraintBottom_toTopOf="@+id/openHistory"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.503"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.743" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 

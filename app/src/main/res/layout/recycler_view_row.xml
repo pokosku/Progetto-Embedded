@@ -21,7 +21,6 @@
                 android:id="@+id/recipe_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
                 android:text="TextView"
                 android:padding="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/guideLine"
-                app:layout_constraintGuide_percent="0.4"/>
+                app:layout_constraintGuide_percent="0.5"/>
+
             <TextView
                 android:id="@+id/creation_date"
                 android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                 android:id="@+id/delete_recipe_btn"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="36dp"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/bin"
                 android:background="@null"
                 android:scaleType="fitCenter"
