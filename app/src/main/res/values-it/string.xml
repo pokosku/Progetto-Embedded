@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottoni -->
+    <string name="app_name">ChefGPT</string>
+    <string name="DetectFood">Rivela cibo</string>
+    <string name="RandomRecipe">Ricetta Random</string>
+    <string name="Favorites">Preferiti</string>
+    <string name="Gallery">Galleria</string>
+    <string name="Camera">Camera</string>
+    <string name="Predict">Predici</string>
+    <string name="Recipe">Ricetta</string>
+    <!-- ImagePredictionActivity -->
+    <string name="AddToFavourite">Aggiungi ai preferiti</string>
+    <string name="SelectImage">Seleziona un\'immagine</string>
+    <string name="ImageControl">Seleziona un\'immagine prima!!</string>
+    <string name="PressPredictFirst">Premi Predici prima!!</string>">
+    <!-- SettingsDialogFragment -->
+    <string-array name="theme_options">
+        <item>Chiaro</item>
+        <item>Scuro</item>
+        <item>Default Sistema</item>
+    </string-array>
+
+    <string-array name="language_options">
+        <item>Italiano</item>
+        <item>English</item>
+    </string-array>
+</resources>

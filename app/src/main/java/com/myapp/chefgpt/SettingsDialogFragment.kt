@@ -37,7 +37,6 @@ class SettingsDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val darkmodeButton = view.findViewById<SwitchCompat>(R.id.dmodeButton)
         val backgroundLayout = view.findViewById<FrameLayout>(R.id.backgroundLayout)
         val contentLayout = view.findViewById<LinearLayout>(R.id.contentLayout)
         val okButton = view.findViewById<Button>(R.id.okButton)
@@ -57,28 +56,6 @@ class SettingsDialogFragment : DialogFragment() {
         okButton.setOnClickListener {
             dismiss()
         }
-
-        //TODO : salvare la preferenza
-        //legge se è impostato da sistema il tema scuso
-//        val systemTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//        if (systemTheme == Configuration.UI_MODE_NIGHT_YES) {
-//            //mette il bottone già impostato
-//            darkmodeButton.isChecked = true
-//        }else{
-//            // lo lascia attivabile
-//            darkmodeButton.isChecked = false
-//        }
-//
-//        //cambia la modalità di tema
-//        darkmodeButton.setOnCheckedChangeListener{ buttonView, isChecked ->
-//            if (isChecked) {
-//                // se è attivato metti la darkmode
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-//            } else {
-//                // sennò segui il tema di default del sistema
-//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-//            }
-//        }
 
         // Setta il valore iniziale dello spinner in base al tema salvato
         val prefs = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
@@ -153,10 +130,5 @@ class SettingsDialogFragment : DialogFragment() {
         // Sfondo semi-trasparente nero (overlay)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
-
-    // Salva la preferenza
-//        val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-//        prefs.edit().putString("theme", themePref).apply()
-//
 
 }

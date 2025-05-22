@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
         this.resources.updateConfiguration(config, this.resources.displayMetrics)
 
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
         val toImagePredictionButton = findViewById<Button>(R.id.toImagePredictionButton)
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //TODO: gestire la ricetta random
         toRandomRecipe.setOnClickListener{view ->
             val intent = Intent(view.context, RecipeLoadingActivity::class.java)
             intent.putExtra("is_random_recipe", true)

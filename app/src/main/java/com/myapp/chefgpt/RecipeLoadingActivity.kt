@@ -1,5 +1,6 @@
 package com.myapp.chefgpt
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -36,6 +37,9 @@ class RecipeLoadingActivity : AppCompatActivity(){
 
             loadingImageView = findViewById(R.id.loadingGif)
 
+            val prefs = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            val langCode = prefs.getString("selected_language", "en") ?: "en"
+
 
             if(isRandomRecipe){
                 foodName = generateRandomFoodname()
@@ -47,7 +51,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     loadLlmModel()
                 }
                 if (llmInference != null) {
-                    startInference(foodName, imageUriString, isRandomRecipe)
+                    startInference(foodName, imageUriString, isRandomRecipe,langCode)
 
                 } else {
                     AlertDialog.Builder(this@RecipeLoadingActivity)
@@ -59,14 +63,23 @@ class RecipeLoadingActivity : AppCompatActivity(){
             }
         }
 
-    private fun startInference(foodName: String, imageUriString: String?, isRandomRecipe : Boolean){
+    private fun startInference(foodName: String, imageUriString: String?, isRandomRecipe : Boolean, langCode : String){
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val maxTokens = 350
         var currentTokens = 0
+        var prompt=""
+        if(langCode=="en") {
+             prompt="Write only the ingredients and instructions to make [$foodName], for one person.\n" +
+                    "No introduction, no title, no conclusion, no notes. Keep it short and clear."
+        }
+        if(langCode=="it"){
+            prompt="Scrivi solo gli ingredienti e le istruzioni per fare [$foodName], per una persona.\n" +
+                    "No introduzioni, no titoli, no conclusioni, no note. Tienila chiara e corta."
+        }
+
         val resultBuilder = StringBuilder()
         llmInference?.generateResponseAsync(
-            "Write only the ingredients and instructions to make [$foodName].\n" +
-                    "No introduction, no title, no conclusion, no notes. Keep it short and clear.",
+            prompt,
             ProgressListener<String>{ partialResult, done ->
 
                 currentTokens++
@@ -97,7 +110,6 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     .setModelPath("/data/local/tmp/llm/gemma3-1B-it-int4.task")
                     .setMaxTopK(64)
                     .setPreferredBackend(LlmInference.Backend.CPU)
-                    //TODO : verificare maxTokens
                     .setMaxTokens(350)
                     .build()
                 LlmInference.createFromOptions(this,taskOptions)

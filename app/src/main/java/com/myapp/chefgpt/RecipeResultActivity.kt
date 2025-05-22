@@ -1,6 +1,7 @@
 package com.myapp.chefgpt
 
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -11,7 +12,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.myapp.chefgpt.helpers.MarkdownHelper
@@ -25,6 +25,11 @@ import java.util.Date
 class RecipeResultActivity : AppCompatActivity(){
 
     private lateinit var mRecipeViewModel: RecipeViewModel
+    private var buttonToRecipeResultEnabled: Boolean = true
+
+    companion object {
+        private const val BUTTON_STATE = "button_state"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +52,14 @@ class RecipeResultActivity : AppCompatActivity(){
 
         val imageUri = Uri.parse(imageUriString)
 
+        val prefs = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val langCode = prefs.getString("selected_language", "en") ?: "en"
+
+        if (savedInstanceState != null) {
+                toFavoriteRecipesBtn.setEnabled(savedInstanceState.getBoolean(BUTTON_STATE))
+                buttonToRecipeResultEnabled = savedInstanceState.getBoolean(BUTTON_STATE)
+        }
+
         // se è una ricetta casuale viene caricata un immagine placeholder
         if(isRandomRecipe){
             imageView.setImageResource(R.drawable.empty)
@@ -65,7 +78,7 @@ class RecipeResultActivity : AppCompatActivity(){
 
         //inserimento della ricetta nel database (preferiti)
         toFavoriteRecipesBtn.setOnClickListener {
-            val newRecipe = Recipe(foodName!!, recipeResult, generateCreationDate())
+            val newRecipe = Recipe(foodName, recipeResult, generateCreationDate())
             var overwritable = false
 
             mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
@@ -77,17 +90,31 @@ class RecipeResultActivity : AppCompatActivity(){
                 val builder = AlertDialog.Builder(this)
                 builder.setPositiveButton("Yes") { _, _ ->
                     insertToDatabase(newRecipe)
+                    buttonToRecipeResultEnabled=false
                 }
                 builder.setNegativeButton("No") { _, _ ->
-                    toFavoriteRecipesBtn.setEnabled(true) }
+                    toFavoriteRecipesBtn.setEnabled(true)
+                    buttonToRecipeResultEnabled=true
+                }
                 builder.setTitle(newRecipe.name)
-                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
+                if(langCode=="en") {
+                    builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
+                }
+                if(langCode=="it") {
+                    builder.setMessage("Una ricetta per ${newRecipe.name} esiste già nei tuoi preferiti.Vuoi sovrascriverla?")
+                }
                 builder.create().show()
             } else {
                 insertToDatabase(newRecipe)
-                Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+                if(langCode=="en") {
+                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+                }
+                if(langCode=="it") {
+                    Toast.makeText(this, "Ricetta aggiunta ai preferiti", Toast.LENGTH_SHORT).show()
+                }
             }
             toFavoriteRecipesBtn.setEnabled(false)
+            buttonToRecipeResultEnabled=false
         }
 
 
@@ -114,6 +141,11 @@ class RecipeResultActivity : AppCompatActivity(){
     }
     private fun insertToDatabase(recipe: Recipe) {
         mRecipeViewModel.addRecipe(recipe)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(BUTTON_STATE, buttonToRecipeResultEnabled)
     }
 
 }

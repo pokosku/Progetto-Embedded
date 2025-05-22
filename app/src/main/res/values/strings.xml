@@ -1,17 +1,19 @@
 <resources>
     <string name="app_name">ChefGPT</string>
-
+    <!-- Button -->
     <string name="DetectFood">Detect Food</string>
     <string name="RandomRecipe">Random Recipe</string>
     <string name="Favorites">Favorites</string>
-
     <string name="Gallery">Gallery</string>
     <string name="Camera">Camera</string>
     <string name="Predict">Predict</string>
     <string name="Recipe">Recipe</string>
-
     <string name="AddToFavourite">Add to favourite</string>
-
+    <!-- ImagePredictionActivity -->
+    <string name="SelectImage">Select an image</string>"
+    <string name="ImageControl">Select an image first!!</string>
+    <string name="PressPredictFirst">Press predict first!!</string>"
+    
     <string-array name="theme_options">
         <item>Light</item>
         <item>Dark</item>
