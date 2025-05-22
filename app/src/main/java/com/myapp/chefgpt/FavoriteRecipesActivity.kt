@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,9 +49,6 @@ class FavoriteRecipesActivity : AppCompatActivity() {
             }
             dialog.show(supportFragmentManager, "settings_dialog")
         }
-
-
-        //TODO: sistemare grafica recyclerview (aggiungere il vector asset "delete")
     }
 
 }

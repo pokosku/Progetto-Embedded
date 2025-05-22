@@ -46,7 +46,7 @@ class RecipeResultActivity : AppCompatActivity(){
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         val imageUriString = intent.getStringExtra("imageURI")
-        var recipeResult = intent.getStringExtra("inference_result")!!
+        val recipeResult = intent.getStringExtra("inference_result")!!
         val foodName = intent.getStringExtra("foodname")
         val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
 
@@ -147,5 +147,4 @@ class RecipeResultActivity : AppCompatActivity(){
         super.onSaveInstanceState(outState)
         outState.putBoolean(BUTTON_STATE, buttonToRecipeResultEnabled)
     }
-
 }
