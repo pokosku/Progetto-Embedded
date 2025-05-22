@@ -1,10 +1,23 @@
 <resources>
     <string name="app_name">ChefGPT</string>
+
+    <string name="DetectFood">Detect Food</string>
+    <string name="RandomRecipe">Random Recipe</string>
+    <string name="Favorites">Favorites</string>
+
+    <string name="Gallery">Gallery</string>
+    <string name="Camera">Camera</string>
+    <string name="Predict">Predict</string>
+    <string name="Recipe">Recipe</string>
+
+    <string name="AddToFavourite">Add to favourite</string>
+
     <string-array name="theme_options">
         <item>Light</item>
         <item>Dark</item>
         <item>System default</item>
     </string-array>
+
     <string-array name="language_options">
         <item>Italiano</item>
         <item>English</item>

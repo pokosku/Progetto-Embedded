@@ -41,7 +41,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="25dp"
-        android:text="Add to favourite"
+        android:text="@string/AddToFavourite"
         android:textSize="20sp"
         app:icon="@drawable/star"
         app:iconSize="40dp"

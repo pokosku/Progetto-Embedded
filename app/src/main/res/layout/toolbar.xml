@@ -15,6 +15,11 @@
         android:layout_alignParentEnd="true"
         android:padding="12dp">
 
+        <ImageView
+            android:id="@+id/imagelogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/name" />
 
         <ImageButton
             android:id="@+id/settings"
@@ -25,12 +30,6 @@
             app:tint="@android:color/holo_orange_light"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/settings" />
-
-        <ImageView
-            android:id="@+id/imagelogo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/name" />
 
     </RelativeLayout>
 
