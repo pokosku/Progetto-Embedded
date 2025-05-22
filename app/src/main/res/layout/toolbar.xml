@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@android:color/transparent"
-    app:navigationIcon="@drawable/back"
     android:elevation="0dp">
 
     <RelativeLayout
@@ -14,6 +13,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:padding="12dp">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@android:color/holo_orange_light"
+            android:src="@drawable/back" />
 
         <ImageView
             android:id="@+id/imagelogo"
@@ -33,4 +42,4 @@
 
     </RelativeLayout>
 
-</androidx.appcompat.widget.Toolbar>
+</RelativeLayout>

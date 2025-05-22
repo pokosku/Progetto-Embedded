@@ -56,9 +56,8 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         val imageView = findViewById<ImageView>(R.id.imageView)
 
-        val toolbarView = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbarView)
-        //val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
+        val toolbarView = findViewById<View>(R.id.toolbar)
+        val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         if (savedInstanceState != null) {
@@ -143,10 +142,7 @@ class ImagePredictionActivity : AppCompatActivity() {
         }
 
 
-//        backButton.setOnClickListener {
-//            onBackPressedDispatcher.onBackPressed()
-//        }
-        toolbarView.setNavigationOnClickListener {
+        backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
