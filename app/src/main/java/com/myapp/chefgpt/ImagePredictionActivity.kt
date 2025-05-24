@@ -40,6 +40,11 @@ class ImagePredictionActivity : AppCompatActivity() {
         private const val KEY_IMAGE_URI = "key_image_uri"
         private const val KEY_FOOD_NAME_TEXT = "key_food_name_text"
         private const val KEY_LOADED_IMAGE = "loaded_image"
+        //TODO di possono "unire" queste 2 key?
+        private const val FOOD_IMAGE_KEY = "foodimage"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,16 +126,16 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         buttonToRecipeResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeLoadingActivity::class.java)
-            //TODO sistemare controlli stringhe perchè dopo aver aggiunto il recupero dal cambio di orientamento non fa andare avanti
             if(!loadedImage){
                 foodName.text=getString(R.string.ImageControl)
             }
             else{
-                if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
+                //TODO e la versione in italiano di questi errori? (ora dovrebbe andare)
+                if(foodName.text!=getString(R.string.ImageControl) && foodName.text!=getString(R.string.SelectImage) && foodName.text!=getString(R.string.PressPredictFirst)){
                     try{
-                        intent.putExtra("foodname",foodName.text)
-                        intent.putExtra("foodimage",imageUri.toString())
-                        intent.putExtra("is_random_recipe",false)
+                        intent.putExtra(FOOD_NAME_KEY,foodName.text)
+                        intent.putExtra(FOOD_IMAGE_KEY,imageUri.toString())
+                        intent.putExtra(IS_RANDOM_RECIPE_KEY,false)
                         startActivity(intent)}
                     catch (e: UninitializedPropertyAccessException){
                         foodName.text=getString(R.string.ImageControl)
@@ -152,7 +157,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 
@@ -173,20 +178,16 @@ class ImagePredictionActivity : AppCompatActivity() {
             permissionLauncher.launch(permission)
         }
     }
-    //TODO: testare rimozione try catch
+    //TODO: testare rimozione try catch (l'ho tolto e mi sembra tutto ok)
     private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
-        try{
-            val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
-            //TODO controllare eccezione bitmap troppo grande
-            imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
-            val input = TensorImage.fromBitmap(imageBitmap)
-            val outputs = model.process(input)
-            val probability = outputs.probabilityAsCategoryList
-            val best = (probability.maxByOrNull { it.score })!!.label
-            return best
-        }catch (e: NullPointerException){
-            return "Select an image first"
-        }
+        val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
+        //TODO controllare eccezione bitmap troppo grande
+        imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
+        val input = TensorImage.fromBitmap(imageBitmap)
+        val outputs = model.process(input)
+        val probability = outputs.probabilityAsCategoryList
+        val best = (probability.maxByOrNull { it.score })!!.label
+        return best
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

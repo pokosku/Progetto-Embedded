@@ -13,7 +13,7 @@
     <!-- ImagePredictionActivity -->
     <string name="SelectImage">Seleziona un\'immagine</string>
     <string name="ImageControl">Seleziona un\'immagine prima!!</string>
-    <string name="PressPredictFirst">Premi Predici prima!!</string>">
+    <string name="PressPredictFirst">Prima premi Predici!!</string>">
     <!-- SettingsDialogFragment -->
     <string name="Settings">Impostazioni</string>
     <string name="AppTheme">Tema dell\'app</string>

@@ -16,6 +16,10 @@ import com.myapp.chefgpt.database.RecipeViewModel
 class FavoriteRecipesActivity : AppCompatActivity() {
     private lateinit var mRecipeViewModel: RecipeViewModel
 
+    companion object{
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favorite_recipes)
@@ -47,7 +51,7 @@ class FavoriteRecipesActivity : AppCompatActivity() {
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 
