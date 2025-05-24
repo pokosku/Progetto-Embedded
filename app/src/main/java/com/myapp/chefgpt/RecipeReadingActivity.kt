@@ -8,6 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.myapp.chefgpt.helpers.MarkdownHelper
 
 class RecipeReadingActivity : AppCompatActivity() {
+
+    companion object{
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_reading)
@@ -33,7 +38,7 @@ class RecipeReadingActivity : AppCompatActivity() {
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 }

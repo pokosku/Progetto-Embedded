@@ -45,8 +45,8 @@
 
     <Button
         android:id="@+id/addToFavourite"
-        android:layout_width="273dp"
-        android:layout_height="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_weight="1"
         android:text="@string/AddToFavourite"
         android:textSize="20sp"

@@ -27,18 +27,25 @@ class RecipeLoadingActivity : AppCompatActivity(){
     private var llmInference: LlmInference? = null
     private lateinit var loadingImageView: ImageView
 
+    companion object{
+        private const val LANGUAGE_KEY = "selected_language"
+        private const val FOOD_IMAGE_KEY = "foodimage"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+    }
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_recipeloading)
 
-            val imageUriString = intent.getStringExtra("foodimage")
-            var foodName = intent.getStringExtra("foodname")!!
-            val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
+            val imageUriString = intent.getStringExtra(FOOD_IMAGE_KEY)
+            var foodName = intent.getStringExtra(FOOD_NAME_KEY)!!
+            val isRandomRecipe = intent.getBooleanExtra(IS_RANDOM_RECIPE_KEY, false)
 
             loadingImageView = findViewById(R.id.loadingGif)
 
-            val prefs = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-            val langCode = prefs.getString("selected_language", "en") ?: "en"
+            val preferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            val languageCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
 
 
             if(isRandomRecipe){
@@ -51,7 +58,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     loadLlmModel()
                 }
                 if (llmInference != null) {
-                    startInference(foodName, imageUriString, isRandomRecipe,langCode)
+                    startInference(foodName, imageUriString, isRandomRecipe,languageCode)
 
                 } else {
                     AlertDialog.Builder(this@RecipeLoadingActivity)
@@ -66,6 +73,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
     private fun startInference(foodName: String, imageUriString: String?, isRandomRecipe : Boolean, langCode : String){
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val maxTokens = 350
+        //TODO mi sa che son pochi sti token
         var currentTokens = 0
         var prompt=""
         if(langCode=="en") {
@@ -95,8 +103,8 @@ class RecipeLoadingActivity : AppCompatActivity(){
                         if(imageUriString != null)
                             intent.putExtra("imageURI",imageUriString)
                         intent.putExtra("inference_result", resultBuilder.toString())
-                        intent.putExtra("foodname", foodName)
-                        intent.putExtra("is_random_recipe", isRandomRecipe)
+                        intent.putExtra(FOOD_NAME_KEY, foodName)
+                        intent.putExtra(IS_RANDOM_RECIPE_KEY, isRandomRecipe)
                         startActivity(intent)
                         finish()
                     }

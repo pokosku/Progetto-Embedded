@@ -29,6 +29,10 @@ class RecipeResultActivity : AppCompatActivity(){
 
     companion object {
         private const val BUTTON_STATE = "button_state"
+        private const val LANGUAGE_KEY = "selected_language"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,13 +51,13 @@ class RecipeResultActivity : AppCompatActivity(){
 
         val imageUriString = intent.getStringExtra("imageURI")
         val recipeResult = intent.getStringExtra("inference_result")!!
-        val foodName = intent.getStringExtra("foodname")
-        val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
+        val foodName = intent.getStringExtra(FOOD_NAME_KEY)
+        val isRandomRecipe = intent.getBooleanExtra(IS_RANDOM_RECIPE_KEY, false)
 
         val imageUri = Uri.parse(imageUriString)
 
-        val prefs = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        val langCode = prefs.getString("selected_language", "en") ?: "en"
+        val preferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val languageCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
 
         if (savedInstanceState != null) {
                 toFavoriteRecipesBtn.setEnabled(savedInstanceState.getBoolean(BUTTON_STATE))
@@ -97,19 +101,19 @@ class RecipeResultActivity : AppCompatActivity(){
                     buttonToRecipeResultEnabled=true
                 }
                 builder.setTitle(newRecipe.name)
-                if(langCode=="en") {
+                if(languageCode=="en") {
                     builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
                 }
-                if(langCode=="it") {
+                if(languageCode=="it") {
                     builder.setMessage("Una ricetta per ${newRecipe.name} esiste già nei tuoi preferiti.Vuoi sovrascriverla?")
                 }
                 builder.create().show()
             } else {
                 insertToDatabase(newRecipe)
-                if(langCode=="en") {
+                if(languageCode=="en") {
                     Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
                 }
-                if(langCode=="it") {
+                if(languageCode=="it") {
                     Toast.makeText(this, "Ricetta aggiunta ai preferiti", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -128,7 +132,7 @@ class RecipeResultActivity : AppCompatActivity(){
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 

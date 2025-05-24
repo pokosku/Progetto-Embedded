@@ -16,6 +16,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val THEME_KEY = "selected_theme"
         private const val LANGUAGE_KEY = "selected_language"
+        private const val FOOD_IMAGE_KEY = "foodimage"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +32,8 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(theme)
 
         //lingua
-        val langCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
-        val locale = Locale(langCode)
+        val languageCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
+        val locale = Locale(languageCode)
         Locale.setDefault(locale)
         val config = Configuration()
         config.setLocale(locale)
@@ -56,9 +60,9 @@ class MainActivity : AppCompatActivity() {
 
         toRandomRecipe.setOnClickListener{view ->
             val intent = Intent(view.context, RecipeLoadingActivity::class.java)
-            intent.putExtra("is_random_recipe", true)
-            intent.putExtra("foodname", "")
-            intent.putExtra("foodimage","")
+            intent.putExtra(IS_RANDOM_RECIPE_KEY, true)
+            intent.putExtra(FOOD_NAME_KEY, "")
+            intent.putExtra(FOOD_IMAGE_KEY,"")
             startActivity(intent)
         }
         settingsButton.setOnClickListener{
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 }
