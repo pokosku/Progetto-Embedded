@@ -10,6 +10,8 @@ import com.myapp.chefgpt.helpers.MarkdownHelper
 class RecipeReadingActivity : AppCompatActivity() {
 
     companion object{
+        private const val RECIPE_NAME_KEY = "recipe_name"
+        private const val RECIPE_DESCRIPTION_KEY = "recipe_desc"
         private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
@@ -24,8 +26,8 @@ class RecipeReadingActivity : AppCompatActivity() {
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
-        titleTextView.text = intent.getStringExtra("recipe_name")
-        val recipeResult = intent.getStringExtra("recipe_desc")
+        titleTextView.text = intent.getStringExtra(RECIPE_NAME_KEY)
+        val recipeResult = intent.getStringExtra(RECIPE_DESCRIPTION_KEY)
         MarkdownHelper(recipeResult!!, this, descriptionTextView).format()
 
         backButton.setOnClickListener {

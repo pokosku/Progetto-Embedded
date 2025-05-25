@@ -41,7 +41,7 @@ class ImagePredictionActivity : AppCompatActivity() {
         private const val KEY_FOOD_NAME_TEXT = "key_food_name_text"
         private const val KEY_LOADED_IMAGE = "loaded_image"
         //TODO di possono "unire" queste 2 key?
-        private const val FOOD_IMAGE_KEY = "foodimage"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
         private const val FOOD_NAME_KEY = "foodname"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
         private const val SETTINGS_DIALOG_TAG = "settings_dialog"
@@ -134,7 +134,7 @@ class ImagePredictionActivity : AppCompatActivity() {
                 if(foodName.text!=getString(R.string.ImageControl) && foodName.text!=getString(R.string.SelectImage) && foodName.text!=getString(R.string.PressPredictFirst)){
                     try{
                         intent.putExtra(FOOD_NAME_KEY,foodName.text)
-                        intent.putExtra(FOOD_IMAGE_KEY,imageUri.toString())
+                        intent.putExtra(FOOD_IMAGE_URI_STRING_KEY,imageUri.toString())
                         intent.putExtra(IS_RANDOM_RECIPE_KEY,false)
                         startActivity(intent)}
                     catch (e: UninitializedPropertyAccessException){

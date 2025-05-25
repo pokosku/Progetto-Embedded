@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val THEME_KEY = "selected_theme"
         private const val LANGUAGE_KEY = "selected_language"
-        private const val FOOD_IMAGE_KEY = "foodimage"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
         private const val FOOD_NAME_KEY = "foodname"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
         private const val SETTINGS_DIALOG_TAG = "settings_dialog"
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val toFavorites = findViewById<Button>(R.id.openFavorites)
         val toRandomRecipe = findViewById<Button>(R.id.randomRecipe)
         val settingsButton = findViewById<ImageButton>(R.id.settings)
-
+        //TODO bottone che si vede poco?
 
         toImagePredictionButton.setOnClickListener{ view ->
             val intent = Intent(view.context, ImagePredictionActivity::class.java)
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(view.context, RecipeLoadingActivity::class.java)
             intent.putExtra(IS_RANDOM_RECIPE_KEY, true)
             intent.putExtra(FOOD_NAME_KEY, "")
-            intent.putExtra(FOOD_IMAGE_KEY,"")
+            intent.putExtra(FOOD_IMAGE_URI_STRING_KEY,"")
             startActivity(intent)
         }
         settingsButton.setOnClickListener{

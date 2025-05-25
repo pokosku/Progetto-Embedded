@@ -29,16 +29,17 @@ class RecipeLoadingActivity : AppCompatActivity(){
 
     companion object{
         private const val LANGUAGE_KEY = "selected_language"
-        private const val FOOD_IMAGE_KEY = "foodimage"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
         private const val FOOD_NAME_KEY = "foodname"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val INFERENCE_RESULT_KEY = "inference_result"
     }
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_recipeloading)
 
-            val imageUriString = intent.getStringExtra(FOOD_IMAGE_KEY)
+            val imageUriString = intent.getStringExtra(FOOD_IMAGE_URI_STRING_KEY)
             var foodName = intent.getStringExtra(FOOD_NAME_KEY)!!
             val isRandomRecipe = intent.getBooleanExtra(IS_RANDOM_RECIPE_KEY, false)
 
@@ -101,8 +102,8 @@ class RecipeLoadingActivity : AppCompatActivity(){
                         progressBar.progress = 100
                         val intent = Intent(this@RecipeLoadingActivity, RecipeResultActivity::class.java)
                         if(imageUriString != null)
-                            intent.putExtra("imageURI",imageUriString)
-                        intent.putExtra("inference_result", resultBuilder.toString())
+                            intent.putExtra(FOOD_IMAGE_URI_STRING_KEY,imageUriString)
+                        intent.putExtra(INFERENCE_RESULT_KEY, resultBuilder.toString())
                         intent.putExtra(FOOD_NAME_KEY, foodName)
                         intent.putExtra(IS_RANDOM_RECIPE_KEY, isRandomRecipe)
                         startActivity(intent)
