@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.myapp.chefgpt.ml.AutoModel1
@@ -33,17 +34,23 @@ class ImagePredictionActivity : AppCompatActivity() {
     private lateinit var imageUri: Uri
 
     private lateinit var imageBitmap : Bitmap
+    private var loadedImage : Boolean = false
 
     companion object {
         private const val KEY_IMAGE_URI = "key_image_uri"
         private const val KEY_FOOD_NAME_TEXT = "key_food_name_text"
+        private const val KEY_LOADED_IMAGE = "loaded_image"
+        //TODO di possono "unire" queste 2 key?
+        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_imageprediction)
 
-        var loadedImage= false
         val model = AutoModel1.newInstance(this) //caricamento modello immagini
 
         val takePictureButton = findViewById<Button>(R.id.openCamera)
@@ -64,6 +71,8 @@ class ImagePredictionActivity : AppCompatActivity() {
                 imageUri = Uri.parse(it)
                 imageView.setImageURI(imageUri)
             }
+            //Ripristina il boolean se l'immagine è già stata caricata oppure no
+            loadedImage = savedInstanceState.getBoolean(KEY_LOADED_IMAGE)
             // Ripristina il testo della TextView
             foodName.text = savedInstanceState.getString(KEY_FOOD_NAME_TEXT)
         }
@@ -111,28 +120,28 @@ class ImagePredictionActivity : AppCompatActivity() {
             if(loadedImage) {
                 foodName.text = imageClassification(imageView.drawable, model)
             }else{
-                foodName.text="Select an image first!!"
+                foodName.text=getString(R.string.ImageControl)
             }
         }
 
         buttonToRecipeResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeLoadingActivity::class.java)
-            //TODO sistemare controlli stringhe perchè dopo aver aggiunto il recupero dal cambio di orientamento non fa andare avanti
             if(!loadedImage){
-                foodName.text="Select an image first!!"
+                foodName.text=getString(R.string.ImageControl)
             }
             else{
-                if(foodName.text!="Select an image first!!" && foodName.text!="Select an image" && foodName.text!="Press predict first!!"){
+                //TODO e la versione in italiano di questi errori? (ora dovrebbe andare)
+                if(foodName.text!=getString(R.string.ImageControl) && foodName.text!=getString(R.string.SelectImage) && foodName.text!=getString(R.string.PressPredictFirst)){
                     try{
-                        intent.putExtra("foodname",foodName.text)
-                        intent.putExtra("foodimage",imageUri.toString())
-                        intent.putExtra("is_random_recipe",false)
+                        intent.putExtra(FOOD_NAME_KEY,foodName.text)
+                        intent.putExtra(FOOD_IMAGE_URI_STRING_KEY,imageUri.toString())
+                        intent.putExtra(IS_RANDOM_RECIPE_KEY,false)
                         startActivity(intent)}
                     catch (e: UninitializedPropertyAccessException){
-                        foodName.text="Select an image first!!"
+                        foodName.text=getString(R.string.ImageControl)
                     }
                 }else{
-                    foodName.text="Press predict first!!"
+                    foodName.text=getString(R.string.PressPredictFirst)
                 }
             }
         }
@@ -148,7 +157,7 @@ class ImagePredictionActivity : AppCompatActivity() {
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 
@@ -169,20 +178,16 @@ class ImagePredictionActivity : AppCompatActivity() {
             permissionLauncher.launch(permission)
         }
     }
-    //TODO: testare rimozione try catch
+    //TODO: testare rimozione try catch (l'ho tolto e mi sembra tutto ok)
     private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
-        try{
-            val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
-            //TODO controllare eccezione bitmap troppo grande
-            imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
-            val input = TensorImage.fromBitmap(imageBitmap)
-            val outputs = model.process(input)
-            val probability = outputs.probabilityAsCategoryList
-            val best = (probability.maxByOrNull { it.score })!!.label
-            return best
-        }catch (e: NullPointerException){
-            return "Select an image first"
-        }
+        val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
+        //TODO controllare eccezione bitmap troppo grande
+        imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
+        val input = TensorImage.fromBitmap(imageBitmap)
+        val outputs = model.process(input)
+        val probability = outputs.probabilityAsCategoryList
+        val best = (probability.maxByOrNull { it.score })!!.label
+        return best
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -191,6 +196,8 @@ class ImagePredictionActivity : AppCompatActivity() {
         if (::imageUri.isInitialized) {
             outState.putString(KEY_IMAGE_URI, imageUri.toString())
         }
+        //Salva il boolean se l'immagine è già stata caricata oppure no
+        outState.putBoolean(KEY_LOADED_IMAGE,loadedImage)
         // Salva il testo della TextView
         val foodName = findViewById<TextView>(R.id.foodName)
         outState.putString(KEY_FOOD_NAME_TEXT, foodName.text.toString())

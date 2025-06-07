@@ -1,6 +1,7 @@
 package com.myapp.chefgpt
 
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -24,6 +25,17 @@ import java.util.Date
 class RecipeResultActivity : AppCompatActivity(){
 
     private lateinit var mRecipeViewModel: RecipeViewModel
+    private var buttonToRecipeResultEnabled: Boolean = true
+
+    companion object {
+        private const val BUTTON_STATE = "button_state"
+        private const val LANGUAGE_KEY = "selected_language"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val INFERENCE_RESULT_KEY = "inference_result"
+        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,20 +43,28 @@ class RecipeResultActivity : AppCompatActivity(){
 
         mRecipeViewModel = ViewModelProvider(this).get(RecipeViewModel::class.java)
 
-        val textView: TextView = findViewById<TextView>(R.id.textRecipe)
-        val imageView: ImageView= findViewById<ImageView>(R.id.imageView)
-        val toFavoriteRecipesBtn : Button = findViewById<Button>(R.id.addToFavourite)
+        val textView = findViewById<TextView>(R.id.textRecipe)
+        val imageView = findViewById<ImageView>(R.id.imageView)
+        val toFavoriteRecipes = findViewById<Button>(R.id.addToFavourite)
 
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
         val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
-        val imageUriString = intent.getStringExtra("imageURI")
-        var recipeResult = intent.getStringExtra("inference_result")!!
-        val foodName = intent.getStringExtra("foodname")
-        val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
+        val imageUriString = intent.getStringExtra(FOOD_IMAGE_URI_STRING_KEY)
+        val recipeResult = intent.getStringExtra(INFERENCE_RESULT_KEY)!!
+        val foodName = intent.getStringExtra(FOOD_NAME_KEY)
+        val isRandomRecipe = intent.getBooleanExtra(IS_RANDOM_RECIPE_KEY, false)
 
         val imageUri = Uri.parse(imageUriString)
+
+        val preferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val languageCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
+
+        if (savedInstanceState != null) {
+                toFavoriteRecipes.setEnabled(savedInstanceState.getBoolean(BUTTON_STATE))
+                buttonToRecipeResultEnabled = savedInstanceState.getBoolean(BUTTON_STATE)
+        }
 
         // se è una ricetta casuale viene caricata un immagine placeholder
         if(isRandomRecipe){
@@ -63,8 +83,8 @@ class RecipeResultActivity : AppCompatActivity(){
         mRecipeViewModel.findRecipe(foodName!!)
 
         //inserimento della ricetta nel database (preferiti)
-        toFavoriteRecipesBtn.setOnClickListener {
-            val newRecipe = Recipe(foodName!!, recipeResult, generateCreationDate())
+        toFavoriteRecipes.setOnClickListener {
+            val newRecipe = Recipe(foodName, recipeResult, generateCreationDate())
             var overwritable = false
 
             mRecipeViewModel.foundRecipe.observe(this,Observer { recipe ->
@@ -76,17 +96,31 @@ class RecipeResultActivity : AppCompatActivity(){
                 val builder = AlertDialog.Builder(this)
                 builder.setPositiveButton("Yes") { _, _ ->
                     insertToDatabase(newRecipe)
+                    buttonToRecipeResultEnabled=false
                 }
                 builder.setNegativeButton("No") { _, _ ->
-                    toFavoriteRecipesBtn.setEnabled(true) }
+                    toFavoriteRecipes.setEnabled(true)
+                    buttonToRecipeResultEnabled=true
+                }
                 builder.setTitle(newRecipe.name)
-                builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
+                if(languageCode=="en") {
+                    builder.setMessage("A recipe for ${newRecipe.name} already exists in your favorites.\nDo you want to overwrite it?")
+                }
+                if(languageCode=="it") {
+                    builder.setMessage("Una ricetta per ${newRecipe.name} esiste già nei tuoi preferiti.Vuoi sovrascriverla?")
+                }
                 builder.create().show()
             } else {
                 insertToDatabase(newRecipe)
-                Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+                if(languageCode=="en") {
+                    Toast.makeText(this, "Recipe added to favorites", Toast.LENGTH_SHORT).show()
+                }
+                if(languageCode=="it") {
+                    Toast.makeText(this, "Ricetta aggiunta ai preferiti", Toast.LENGTH_SHORT).show()
+                }
             }
-            toFavoriteRecipesBtn.setEnabled(false)
+            toFavoriteRecipes.setEnabled(false)
+            buttonToRecipeResultEnabled=false
         }
 
 
@@ -100,7 +134,7 @@ class RecipeResultActivity : AppCompatActivity(){
             dialog.onDismissListener = {
                 settingsButton.isEnabled = true
             }
-            dialog.show(supportFragmentManager, "settings_dialog")
+            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
         }
     }
 
@@ -115,4 +149,8 @@ class RecipeResultActivity : AppCompatActivity(){
         mRecipeViewModel.addRecipe(recipe)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(BUTTON_STATE, buttonToRecipeResultEnabled)
+    }
 }

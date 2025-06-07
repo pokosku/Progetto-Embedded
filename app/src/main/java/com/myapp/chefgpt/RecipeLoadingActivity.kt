@@ -1,5 +1,6 @@
 package com.myapp.chefgpt
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -26,15 +27,26 @@ class RecipeLoadingActivity : AppCompatActivity(){
     private var llmInference: LlmInference? = null
     private lateinit var loadingImageView: ImageView
 
+    companion object{
+        private const val LANGUAGE_KEY = "selected_language"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
+        private const val FOOD_NAME_KEY = "foodname"
+        private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val INFERENCE_RESULT_KEY = "inference_result"
+    }
+
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_recipeloading)
 
-            val imageUriString = intent.getStringExtra("foodimage")
-            var foodName = intent.getStringExtra("foodname")!!
-            val isRandomRecipe = intent.getBooleanExtra("is_random_recipe", false)
+            val imageUriString = intent.getStringExtra(FOOD_IMAGE_URI_STRING_KEY)
+            var foodName = intent.getStringExtra(FOOD_NAME_KEY)!!
+            val isRandomRecipe = intent.getBooleanExtra(IS_RANDOM_RECIPE_KEY, false)
 
             loadingImageView = findViewById(R.id.loadingGif)
+
+            val preferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            val languageCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
 
 
             if(isRandomRecipe){
@@ -47,7 +59,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     loadLlmModel()
                 }
                 if (llmInference != null) {
-                    startInference(foodName, imageUriString, isRandomRecipe)
+                    startInference(foodName, imageUriString, isRandomRecipe,languageCode)
 
                 } else {
                     AlertDialog.Builder(this@RecipeLoadingActivity)
@@ -59,14 +71,24 @@ class RecipeLoadingActivity : AppCompatActivity(){
             }
         }
 
-    private fun startInference(foodName: String, imageUriString: String?, isRandomRecipe : Boolean){
+    private fun startInference(foodName: String, imageUriString: String?, isRandomRecipe : Boolean, langCode : String){
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         val maxTokens = 350
+        //TODO mi sa che son pochi sti token
         var currentTokens = 0
+        var prompt=""
+        if(langCode=="en") {
+             prompt="Write only the ingredients and instructions to make [$foodName], for one person.\n" +
+                    "No introduction, no title, no conclusion, no notes. Keep it short and clear."
+        }
+        if(langCode=="it"){
+            prompt="Scrivi solo gli ingredienti e le istruzioni per fare [$foodName], per una persona.\n" +
+                    "No introduzioni, no titoli, no conclusioni, no note. Tienila chiara e corta."
+        }
+
         val resultBuilder = StringBuilder()
         llmInference?.generateResponseAsync(
-            "Write only the ingredients and instructions to make [$foodName].\n" +
-                    "No introduction, no title, no conclusion, no notes. Keep it short and clear.",
+            prompt,
             ProgressListener<String>{ partialResult, done ->
 
                 currentTokens++
@@ -80,10 +102,10 @@ class RecipeLoadingActivity : AppCompatActivity(){
                         progressBar.progress = 100
                         val intent = Intent(this@RecipeLoadingActivity, RecipeResultActivity::class.java)
                         if(imageUriString != null)
-                            intent.putExtra("imageURI",imageUriString)
-                        intent.putExtra("inference_result", resultBuilder.toString())
-                        intent.putExtra("foodname", foodName)
-                        intent.putExtra("is_random_recipe", isRandomRecipe)
+                            intent.putExtra(FOOD_IMAGE_URI_STRING_KEY,imageUriString)
+                        intent.putExtra(INFERENCE_RESULT_KEY, resultBuilder.toString())
+                        intent.putExtra(FOOD_NAME_KEY, foodName)
+                        intent.putExtra(IS_RANDOM_RECIPE_KEY, isRandomRecipe)
                         startActivity(intent)
                         finish()
                     }
@@ -97,7 +119,6 @@ class RecipeLoadingActivity : AppCompatActivity(){
                     .setModelPath("/data/local/tmp/llm/gemma3-1B-it-int4.task")
                     .setMaxTopK(64)
                     .setPreferredBackend(LlmInference.Backend.CPU)
-                    //TODO : verificare maxTokens
                     .setMaxTokens(350)
                     .build()
                 LlmInference.createFromOptions(this,taskOptions)

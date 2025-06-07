@@ -31,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="8dp"
-            android:textColor="#333"
             android:textSize="18sp" />
 
     </ScrollView>
@@ -42,7 +41,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginBottom="25dp"
-        android:text="Add to favourite"
+        android:text="@string/AddToFavourite"
         android:textSize="20sp"
         app:icon="@drawable/star"
         app:iconSize="40dp"

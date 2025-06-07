@@ -41,7 +41,6 @@ class RecipeAdapter(private var recipeList : List<Recipe> =
                 builder.create().show()
             }
 
-            //TODO: va aumentata la hitbox del nome, mi viene un cancro a premerla
             recipeNameTextView.setOnClickListener {
                 readRecipe(recipe)
             }

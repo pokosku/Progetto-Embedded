@@ -40,16 +40,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="8dp"
-            android:textColor="#333"
             android:textSize="18sp" />
     </ScrollView>
 
     <Button
         android:id="@+id/addToFavourite"
-        android:layout_width="273dp"
-        android:layout_height="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:layout_weight="1"
-        android:text="Add to favourite"
+        android:text="@string/AddToFavourite"
         android:textSize="20sp"
         app:icon="@drawable/star"
         app:iconSize="40dp"
