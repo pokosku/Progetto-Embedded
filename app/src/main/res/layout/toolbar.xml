@@ -30,16 +30,6 @@
             android:layout_height="match_parent"
             app:srcCompat="@drawable/name" />
 
-        <ImageButton
-            android:id="@+id/settings"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            app:tint="@android:color/holo_orange_light"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/settings" />
-
     </RelativeLayout>
 
 </RelativeLayout>

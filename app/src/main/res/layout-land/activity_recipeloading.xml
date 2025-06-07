@@ -38,7 +38,7 @@
         android:indeterminate="false"
         android:max="100"
         android:progress="0"
-        android:progressTint="@color/purple_500"
+        android:progressTint="@color/progressbar_color"
         android:scaleY="8"
         app:layout_constraintBottom_toBottomOf="@+id/loadingGif"
         app:layout_constraintEnd_toEndOf="parent"

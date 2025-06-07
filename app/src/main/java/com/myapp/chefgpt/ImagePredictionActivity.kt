@@ -27,64 +27,66 @@ import java.io.File
 
 
 class ImagePredictionActivity : AppCompatActivity() {
-
+    //variabili per la fotocamera
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var imageUri: Uri
 
+    //variabili per passare le immagini al modello
     private lateinit var imageBitmap : Bitmap
     private var loadedImage : Boolean = false
 
+    //Costanti varie (Intent, preferenze, ...)
     companion object {
-        private const val KEY_IMAGE_URI = "key_image_uri"
-        private const val KEY_FOOD_NAME_TEXT = "key_food_name_text"
         private const val KEY_LOADED_IMAGE = "loaded_image"
-        //TODO di possono "unire" queste 2 key?
-        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
-        private const val FOOD_NAME_KEY = "foodname"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "food_image"
+        private const val FOOD_NAME_KEY = "food_name"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
-        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_imageprediction)
 
-        val model = AutoModel1.newInstance(this) //caricamento modello immagini
+        //Caricamento modello di classificazione di immagini
+        val model = AutoModel1.newInstance(this)
 
+        //Settaggio dei bottoni, textview, imageview e toolbar
         val takePictureButton = findViewById<Button>(R.id.openCamera)
         val pickImageButton = findViewById<Button>(R.id.openFavorites)
         val predictButton = findViewById<Button>(R.id.predictButton)
-        val buttonToRecipeResult: Button=findViewById(R.id.toRecipeResult)
+        val buttonToRecipeResult = findViewById<Button>(R.id.toRecipeResult)
         val foodName= findViewById<TextView>(R.id.foodName)
-
         val imageView = findViewById<ImageView>(R.id.imageView)
-
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
-        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
+        //Recupero dello stato salvato
         if (savedInstanceState != null) {
             // Ripristina l'URI dell'immagine
-            savedInstanceState.getString(KEY_IMAGE_URI)?.let {
+            savedInstanceState.getString(FOOD_IMAGE_URI_STRING_KEY)?.let {
                 imageUri = Uri.parse(it)
                 imageView.setImageURI(imageUri)
             }
             //Ripristina il boolean se l'immagine è già stata caricata oppure no
             loadedImage = savedInstanceState.getBoolean(KEY_LOADED_IMAGE)
             // Ripristina il testo della TextView
-            foodName.text = savedInstanceState.getString(KEY_FOOD_NAME_TEXT)
+            foodName.text = savedInstanceState.getString(FOOD_NAME_KEY)
         }
 
+        // Registra un ActivityResultLauncher per richiedere il permesso della fotocamera
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
+                //Se il permesso è concesso, avvia la fotocamera
                 launchCamera()
             } else {
+                //Se il permesso è negato, registra un errore
                 Log.e("PermissionDenied","Camera permission denied")
             }
         }
-
+        // Registra un ActivityResultLauncher per scattare una foto
         takePictureLauncher =
             registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
                 if (success) {
@@ -95,7 +97,7 @@ class ImagePredictionActivity : AppCompatActivity() {
                 }
             }
 
-
+        // Registra un ActivityResultLauncher per selezionare un'immagine dalla galleria
         pickImageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
@@ -105,17 +107,18 @@ class ImagePredictionActivity : AppCompatActivity() {
                 }
             }
 
-
+        // Listener per la gestione dello scatto di una foto
         takePictureButton.setOnClickListener {
             checkCameraPermissionAndLaunch()
         }
-
+        // Listener per la gestione della selezione di un'immagine dalla galleria
         pickImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
             pickImageLauncher.launch(intent)
         }
 
+        // Listener per l'avvio della predizione del nome del food
         predictButton.setOnClickListener{
             if(loadedImage) {
                 foodName.text = imageClassification(imageView.drawable, model)
@@ -124,14 +127,17 @@ class ImagePredictionActivity : AppCompatActivity() {
             }
         }
 
+        //Listener per l'avvio del processing della ricetta
         buttonToRecipeResult.setOnClickListener{ view->
             val intent= Intent(view.context,RecipeLoadingActivity::class.java)
+            //Controllo se l'immagine è stata caricata
             if(!loadedImage){
                 foodName.text=getString(R.string.ImageControl)
             }
             else{
-                //TODO e la versione in italiano di questi errori? (ora dovrebbe andare)
+                //Controllo se il nome del food è stato trovato
                 if(foodName.text!=getString(R.string.ImageControl) && foodName.text!=getString(R.string.SelectImage) && foodName.text!=getString(R.string.PressPredictFirst)){
+                    //Passaggio alla schermata di processing della ricetta
                     try{
                         intent.putExtra(FOOD_NAME_KEY,foodName.text)
                         intent.putExtra(FOOD_IMAGE_URI_STRING_KEY,imageUri.toString())
@@ -141,26 +147,19 @@ class ImagePredictionActivity : AppCompatActivity() {
                         foodName.text=getString(R.string.ImageControl)
                     }
                 }else{
+                    //Se il nome del food non è stato trovato, viene mostrato un messaggio di errore
                     foodName.text=getString(R.string.PressPredictFirst)
                 }
             }
         }
 
-
+        //Ritorno alla schermata precedente
         backButton.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        settingsButton.setOnClickListener{
-            settingsButton.isEnabled = false
-            val dialog = SettingsDialogFragment()
-            dialog.onDismissListener = {
-                settingsButton.isEnabled = true
-            }
-            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
-        }
     }
-
+    //Metodo per avviare la fotocamera
     private fun  launchCamera(){
         val photoFile = File.createTempFile("photo",".jpg",cacheDir).apply {
             createNewFile()
@@ -169,7 +168,7 @@ class ImagePredictionActivity : AppCompatActivity() {
         imageUri=FileProvider.getUriForFile(this,"${packageName}.provider",photoFile)
         takePictureLauncher.launch(imageUri)
     }
-
+    //Metodo per controllare il permesso della fotocamera
     private fun checkCameraPermissionAndLaunch() {
         val permission = Manifest.permission.CAMERA
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
@@ -178,13 +177,19 @@ class ImagePredictionActivity : AppCompatActivity() {
             permissionLauncher.launch(permission)
         }
     }
-    //TODO: testare rimozione try catch (l'ho tolto e mi sembra tutto ok)
+    //Metodo per classificare l'immagine
     private fun imageClassification(imageDrawable: Drawable, model: AutoModel1): String{
+        //L'immagine viene convertita in un oggetto Bitmap, ridimensionata e
+        // infine trasformata in un oggetto TensorImage, adatto alla classificazione di immagini.
         val image = Bitmap.createBitmap((imageDrawable as BitmapDrawable).bitmap)
-        //TODO controllare eccezione bitmap troppo grande
         imageBitmap = Bitmap.createScaledBitmap(image, 192, 192, true)
         val input = TensorImage.fromBitmap(imageBitmap)
+
+        //Lancio dell'inferenza sul modello
         val outputs = model.process(input)
+
+        //Ottenimento della probabilità di appartenenza ad ogni classe
+        // e restituzione della classe con la probabilità più alta
         val probability = outputs.probabilityAsCategoryList
         val best = (probability.maxByOrNull { it.score })!!.label
         return best
@@ -194,13 +199,13 @@ class ImagePredictionActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         // Salva l'URI dell'immagine se presente
         if (::imageUri.isInitialized) {
-            outState.putString(KEY_IMAGE_URI, imageUri.toString())
+            outState.putString(FOOD_IMAGE_URI_STRING_KEY, imageUri.toString())
         }
         //Salva il boolean se l'immagine è già stata caricata oppure no
         outState.putBoolean(KEY_LOADED_IMAGE,loadedImage)
         // Salva il testo della TextView
         val foodName = findViewById<TextView>(R.id.foodName)
-        outState.putString(KEY_FOOD_NAME_TEXT, foodName.text.toString())
+        outState.putString(FOOD_NAME_KEY, foodName.text.toString())
     }
 
 
