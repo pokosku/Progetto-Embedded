@@ -12,7 +12,6 @@ class RecipeReadingActivity : AppCompatActivity() {
     companion object{
         private const val RECIPE_NAME_KEY = "recipe_name"
         private const val RECIPE_DESCRIPTION_KEY = "recipe_desc"
-        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +23,6 @@ class RecipeReadingActivity : AppCompatActivity() {
 
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
-        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         titleTextView.text = intent.getStringExtra(RECIPE_NAME_KEY)
         val recipeResult = intent.getStringExtra(RECIPE_DESCRIPTION_KEY)
@@ -34,13 +32,5 @@ class RecipeReadingActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        settingsButton.setOnClickListener{
-            settingsButton.isEnabled = false
-            val dialog = SettingsDialogFragment()
-            dialog.onDismissListener = {
-                settingsButton.isEnabled = true
-            }
-            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
-        }
     }
 }

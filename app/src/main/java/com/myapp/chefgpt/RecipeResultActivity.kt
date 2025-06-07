@@ -30,11 +30,10 @@ class RecipeResultActivity : AppCompatActivity(){
     companion object {
         private const val BUTTON_STATE = "button_state"
         private const val LANGUAGE_KEY = "selected_language"
-        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
-        private const val FOOD_NAME_KEY = "foodname"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "food_image"
+        private const val FOOD_NAME_KEY = "food_name"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
         private const val INFERENCE_RESULT_KEY = "inference_result"
-        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +48,6 @@ class RecipeResultActivity : AppCompatActivity(){
 
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
-        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
 
         val imageUriString = intent.getStringExtra(FOOD_IMAGE_URI_STRING_KEY)
         val recipeResult = intent.getStringExtra(INFERENCE_RESULT_KEY)!!
@@ -128,14 +126,6 @@ class RecipeResultActivity : AppCompatActivity(){
             onBackPressedDispatcher.onBackPressed()
         }
 
-        settingsButton.setOnClickListener{
-            settingsButton.isEnabled = false
-            val dialog = SettingsDialogFragment()
-            dialog.onDismissListener = {
-                settingsButton.isEnabled = true
-            }
-            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
-        }
     }
 
 

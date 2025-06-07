@@ -2,7 +2,7 @@
 <resources>
     <!-- Bottoni -->
     <string name="app_name">ChefGPT</string>
-    <string name="DetectFood">Rivela cibo</string>
+    <string name="DetectFood">Rileva cibo</string>
     <string name="RandomRecipe">Ricetta Random</string>
     <string name="Favorites">Preferiti</string>
     <string name="Gallery">Galleria</string>

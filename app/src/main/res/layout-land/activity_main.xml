@@ -27,7 +27,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Settings"
             android:src="@drawable/settings"
-            app:tint="@android:color/holo_orange_light" />
+            app:tint="@color/dark_brown" />
 
         <ImageView
             android:id="@+id/imageView2"

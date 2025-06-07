@@ -16,9 +16,6 @@ import com.myapp.chefgpt.database.RecipeViewModel
 class FavoriteRecipesActivity : AppCompatActivity() {
     private lateinit var mRecipeViewModel: RecipeViewModel
 
-    companion object{
-        private const val SETTINGS_DIALOG_TAG = "settings_dialog"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +23,7 @@ class FavoriteRecipesActivity : AppCompatActivity() {
 
         val toolbarView = findViewById<View>(R.id.toolbar)
         val backButton = toolbarView.findViewById<ImageButton>(R.id.back)
-        val settingsButton = toolbarView.findViewById<ImageButton>(R.id.settings)
+
 
         val recyclerView : RecyclerView = findViewById(R.id.recipe_recycler_view)
 
@@ -45,14 +42,6 @@ class FavoriteRecipesActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        settingsButton.setOnClickListener{
-            settingsButton.isEnabled = false
-            val dialog = SettingsDialogFragment()
-            dialog.onDismissListener = {
-                settingsButton.isEnabled = true
-            }
-            dialog.show(supportFragmentManager, SETTINGS_DIALOG_TAG)
-        }
     }
 
 }

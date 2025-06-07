@@ -30,7 +30,7 @@
                 android:src="@drawable/settings"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Settings"
-                app:tint="@android:color/holo_orange_light"
+                app:tint="@color/dark_brown"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true" />
         </RelativeLayout>

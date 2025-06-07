@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/tablecloth2">
 
     <ImageView
         android:id="@+id/logoname"
@@ -30,12 +31,13 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:scaleY="8"
         android:layout_marginBottom="44dp"
         android:indeterminate="false"
+        android:scaleY="8"
         android:max="100"
         android:progress="0"
-        android:progressTint="@color/purple_500"
+        android:progressBackgroundTint="@color/white"
+        android:progressTint="@color/progressbar_color"
         app:layout_constraintBottom_toBottomOf="@+id/loadingGif"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
