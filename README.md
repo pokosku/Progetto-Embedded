@@ -9,7 +9,7 @@ Per poter installare modelli in locale su Android e' necessario disporre di Andr
 ## Istruzioni
 
 1) Scaricare il modello dal seguente [link](https://drive.google.com/file/d/1lVjhUcZFg2ivmgW8k0xpSLDt2dSgfso5/view?usp=drive_link).
-2) Estrarre il file .task dall' archivio tar.gz
+2) Copiare il percorso del file scaricato
 3) Collegare il vostro device tramite cavo al PC
 4) Recarsi nel percorso della Android-Sdk (vedere sopra)
 5) In uno spazio vuoto nella cartella -> Tasto destro del mouse > "Apri da terminale"
