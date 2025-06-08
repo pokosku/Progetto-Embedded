@@ -11,14 +11,16 @@ import android.content.res.Configuration
 import java.util.Locale
 
 
+//Activity principale dell'applicazione, contiene i bottoni per navigare tra le diverse schermate
+
 class MainActivity : AppCompatActivity() {
 
     //Costanti varie (Intent, preferenze, ...)
     companion object {
         private const val THEME_KEY = "selected_theme"
         private const val LANGUAGE_KEY = "selected_language"
-        private const val FOOD_IMAGE_URI_STRING_KEY = "foodimage"
-        private const val FOOD_NAME_KEY = "foodname"
+        private const val FOOD_IMAGE_URI_STRING_KEY = "food_image"
+        private const val FOOD_NAME_KEY = "food_name"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
         private const val SETTINGS_DIALOG_TAG = "settings_dialog"
         private const val APP_PREFERENCES_KEY = "app_preferences"

@@ -18,8 +18,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.DialogFragment
 import java.util.Locale
 
-class SettingsDialogFragment : DialogFragment() {
+//DialogFragment per la gestione delle impostazioni
 
+class SettingsDialogFragment : DialogFragment() {
+    //Costanti di preferenze
     companion object {
         private const val THEME_KEY = "selected_theme"
         private const val LANGUAGE_KEY = "selected_language"
@@ -27,6 +29,7 @@ class SettingsDialogFragment : DialogFragment() {
 
     var onDismissListener: (() -> Unit)? = null
 
+    //Metodo per gestire la chiusura del DialogFragment
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onDismissListener?.invoke()
@@ -40,12 +43,13 @@ class SettingsDialogFragment : DialogFragment() {
         return inflater.inflate(R.layout.fragment_settings_dialog, container, false)
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Impostazioni della visualizzazione
         val backgroundLayout = view.findViewById<FrameLayout>(R.id.backgroundLayout)
         val contentLayout = view.findViewById<LinearLayout>(R.id.contentLayout)
         val okButton = view.findViewById<Button>(R.id.okButton)
-
         val themeSpinner = view.findViewById<Spinner>(R.id.themeSpinner)
         val languageSpinner = view.findViewById<Spinner>(R.id.languageSpinner)
 
@@ -90,7 +94,7 @@ class SettingsDialogFragment : DialogFragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        //per la lingua
+        // Setta il valore iniziale dello spinner in base alla lingua salvata
         val savedLanguage = preferences.getString(LANGUAGE_KEY, "en")
         val arrayOfLanguages = resources.getStringArray(R.array.language_options)
 
@@ -100,6 +104,7 @@ class SettingsDialogFragment : DialogFragment() {
         }
         languageSpinner.setSelection(selectedLangIndex)
 
+        // Gestione della selezione della lingua
         languageSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val languageCode = when (position) {
@@ -115,7 +120,7 @@ class SettingsDialogFragment : DialogFragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
-
+    //Metodo per cambiare la lingua dell'applicazione
     private fun changeAppLanguage(context: Context, languageCode: String) {
         val locale = Locale(languageCode)
         Locale.setDefault(locale)

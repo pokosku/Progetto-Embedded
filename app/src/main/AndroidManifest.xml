@@ -20,9 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChefGPT"
         tools:targetApi="31" >
-        <activity
-            android:name=".FavoriteRecipesActivity"
-            android:exported="false" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -49,6 +47,8 @@
             android:screenOrientation="nosensor">
         </activity>
         <activity android:name=".RecipeResultActivity" >
+        </activity>
+        <activity android:name=".FavoriteRecipesActivity" >
         </activity>
         <activity android:name=".RecipeReadingActivity" >
         </activity>

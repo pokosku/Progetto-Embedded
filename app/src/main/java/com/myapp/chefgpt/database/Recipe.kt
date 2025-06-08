@@ -5,9 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-//questa classe servira nell'utilizzo del Database per salvare le ricette
-//come idea si puo utilizzare Room per gestire il database
-
+//Data class per rappresentare una ricetta.
+//Utilizzo di Room DB
 @Entity(tableName = "recipe")
 data class Recipe(
     @PrimaryKey val name: String,
