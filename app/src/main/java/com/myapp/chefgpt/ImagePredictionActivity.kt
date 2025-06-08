@@ -10,6 +10,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.Manifest
+import android.content.Context
+import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
@@ -18,13 +20,15 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.myapp.chefgpt.ml.AutoModel1
 import org.tensorflow.lite.support.image.TensorImage
 import java.io.File
+import java.util.Locale
 
+//Activity per la predizione di immagini scattate o caricate da galleria
 
 class ImagePredictionActivity : AppCompatActivity() {
     //variabili per la fotocamera
@@ -43,10 +47,27 @@ class ImagePredictionActivity : AppCompatActivity() {
         private const val FOOD_IMAGE_URI_STRING_KEY = "food_image"
         private const val FOOD_NAME_KEY = "food_name"
         private const val IS_RANDOM_RECIPE_KEY = "is_random_recipe"
+        private const val APP_PREFERENCES_KEY = "app_preferences"
+        private const val THEME_KEY = "selected_theme"
+        private const val LANGUAGE_KEY = "selected_language"
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val preferences = getSharedPreferences(APP_PREFERENCES_KEY, Context.MODE_PRIVATE)
+
+        //Ottenimento della preferenza del tema
+        val theme = preferences.getInt(THEME_KEY, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(theme)
+
+        //Ottenimento della preferenza del linguaggio
+        val languageCode = preferences.getString(LANGUAGE_KEY, "en") ?: "en"
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.setLocale(locale)
+        this.resources.updateConfiguration(config, this.resources.displayMetrics)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_imageprediction)
 

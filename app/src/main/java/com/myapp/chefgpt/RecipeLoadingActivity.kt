@@ -21,6 +21,8 @@ import kotlinx.coroutines.withContext
 import org.tensorflow.lite.support.image.TensorImage
 import kotlin.random.Random
 
+//Activity di buffering e processing della ricetta
+
 class RecipeLoadingActivity : AppCompatActivity(){
     //Variabile di tipo LlmInference per l'istanza del modello di Natural Language Processing
     private var llmInference: LlmInference? = null
@@ -94,6 +96,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
         val maxTokens = 350
         var currentTokens = 0
         var prompt=""
+        //Prompt in base alla lingua settata
         if(langCode=="en") {
              prompt="Write only the ingredients and instructions to make [$foodName], for one person.\n" +
                     "No introduction, no title, no conclusion, no notes. Keep it short and clear."
@@ -140,6 +143,7 @@ class RecipeLoadingActivity : AppCompatActivity(){
     //Metodo per caricare il modello di Natural Language Processing
     private fun loadLlmModel(): LlmInference? {
         return try {
+            //Inizializzazione del modello, specificando il percorso del modello e le opzioni di configurazione
             val taskOptions = LlmInferenceOptions.builder()
                     .setModelPath("/data/local/tmp/llm/gemma3-1B-it-int4.task")
                     .setMaxTopK(64)
