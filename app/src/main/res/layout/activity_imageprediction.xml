@@ -25,8 +25,9 @@
       android:layout_weight="3">
 
     <Button
-        android:id="@+id/openFavorites"
-        android:layout_width="174dp"
+        android:id="@+id/openGallery"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="56dp"
         android:layout_marginStart="15dp"
         android:text="@string/Gallery"
@@ -40,7 +41,8 @@
 
     <Button
         android:id="@+id/openCamera"
-        android:layout_width="174dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="56dp"
         android:layout_marginEnd="15dp"
         android:text="@string/Camera"
@@ -57,7 +59,7 @@
   <Button
       android:id="@+id/predictButton"
       android:layout_width="wrap_content"
-      android:layout_height="0dp"
+      android:layout_height="22dp"
       android:layout_weight="1"
       android:text="@string/Predict"
       android:textSize="20sp"
@@ -77,7 +79,7 @@
   <Button
       android:id="@+id/toRecipeResult"
       android:layout_width="wrap_content"
-      android:layout_height="0dp"
+      android:layout_height="22dp"
       android:layout_weight="1"
       android:layout_marginBottom="25dp"
       android:text="@string/Recipe"
