@@ -130,10 +130,14 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         // Listener per la gestione dello scatto di una foto
         takePictureButton.setOnClickListener {
+            loadedImage = false
+            foodName.text=getString(R.string.SelectImage)
             checkCameraPermissionAndLaunch()
         }
         // Listener per la gestione della selezione di un'immagine dalla galleria
         pickImageButton.setOnClickListener {
+            loadedImage = false
+            foodName.text=getString(R.string.SelectImage)
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             intent.type = "image/*"
             pickImageLauncher.launch(intent)
