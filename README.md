@@ -9,7 +9,11 @@ Figlio della classe di modelli Gemini, gemma3 e' utilizzato per l'inferenza on-d
 
 Entrambi i modelli sono disponibili su kaggle: [Aiy](https://www.kaggle.com/models/google/aiy), [Gemma3](https://www.kaggle.com/models/google/gemma-3).
 
-
+Per la gestione dei modelli di intelligenza artificiale sono state utilizzate le seguenti librerie esterne:
+- MediaPipe 0.10.22
+- LiteRT (TensorFlow Lite) 2.12.0
+- Markwon 4.6.2
+- Glide 4.16.0
 
 # Prima di partire
 
@@ -43,3 +47,11 @@ E' possibile rimuovere il modello locale tramite i seguenti passi:
 3) In uno spazio vuoto nella cartella -> Tasto destro del mouse -> "Apri da terminale"
 4) Per verificare che il vostro device sia visibile -> `./adb devices` 
 5) Digitare `./adb shell rm -r /data/local/tmp/llm`, questo eliminera' sia la cartella llm che il modello stesso.
+
+---
+### Autori
+
+- Mirco Zavarise
+- Daniele Riolmi Rossetto
+- Luca Tonin
+- Leonardo Joao Fabbro
