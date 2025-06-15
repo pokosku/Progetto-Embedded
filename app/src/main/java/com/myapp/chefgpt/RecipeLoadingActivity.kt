@@ -78,9 +78,20 @@ class RecipeLoadingActivity : AppCompatActivity(){
                 } else {
                     AlertDialog.Builder(this@RecipeLoadingActivity)
                         .setTitle("Error")
-                        .setMessage("Failed to load the model.")
-                        .setPositiveButton("OK", null)
+                        .setMessage(if(languageCode=="en") "Error loading the model" else "Errore nel caricamento del modello")
+                        .setPositiveButton("OK") {_, _ ->
+                            //Creo l'intent per tornare alla activity di provenienza (ImagePredictionActivity o MainActivity)
+                            var intent : Intent
+                            if(isRandomRecipe)
+                                intent = Intent(this@RecipeLoadingActivity, MainActivity::class.java)
+                            else
+                                intent = Intent(this@RecipeLoadingActivity, ImagePredictionActivity::class.java)
+                            startActivity(intent)
+                            //Rimuovo l'activity dalla stack
+                            finish()
+                        }
                         .show()
+
                 }
             }
         }
