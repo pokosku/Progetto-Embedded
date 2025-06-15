@@ -21,7 +21,7 @@ La sintassi dei comandi di adb potrebbe variare in base alla shell utilizzata; a
 8) Digitare `./adb push PERCORSO_DOWNLOAD_MODELLO /data/local/tmp/llm/gemma3-1B-it-int4.task`, e' molto importante che il secondo percorso (device) rispetti questa sintassi (i caratteri di percorso devono essere "/", vanno rimosse le virgolette).
 
 
-# Al termine dell'utilizzo
+## Al termine dell'utilizzo
 
 E' possibile rimuovere il modello locale tramite i seguenti passi:
 
