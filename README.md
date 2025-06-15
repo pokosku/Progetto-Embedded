@@ -6,6 +6,7 @@ Aiy e' un modello di classificazione di immagini, permette di riconoscere 2023 d
 
 ### Gemma3 - Natural Language Processing
 Figlio della classe di modelli Gemini, gemma3 e' utilizzato per l'inferenza on-device grazie alle modeste dimensioni e alla sua efficienza. In ChefGPT viene utilizzato in combinazione con il classificatore di cibo per generare la ricetta rispettiva.
+Abbiamo implementato la possibilità di scrivere la ricetta in italiano e in inglese. Bisogna precisare che in italiano il modello presenta dei probleami a rispettare la grammatica e la sintassi, visto che non è allenato per questo scopo.
 
 Entrambi i modelli sono disponibili su kaggle: [Aiy](https://www.kaggle.com/models/google/aiy), [Gemma3](https://www.kaggle.com/models/google/gemma-3).
 
@@ -34,7 +35,7 @@ La sintassi dei comandi di adb potrebbe variare in base alla shell utilizzata; a
 4) Recarsi nel percorso della Android-Sdk (vedere sopra)
 5) In uno spazio vuoto nella cartella -> Tasto destro del mouse -> "Apri da terminale"
 6) Per verificare che il vostro device sia visibile -> `./adb devices` 
-7) Creare una cartella con il comando per il modello con `./adb shell mkdir /data/local/tmp/llm`
+7) Creare una cartella con il comando per il modello con `./adb shell mkdir /data/local/tmp/llm` 
 8) Digitare `./adb push PERCORSO_DOWNLOAD_MODELLO /data/local/tmp/llm/gemma3-1B-it-int4.task`, e' molto importante che il secondo percorso (device) rispetti questa sintassi (i caratteri di percorso devono essere "/", vanno rimosse le virgolette).
 
 
