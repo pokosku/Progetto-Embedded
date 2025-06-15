@@ -76,7 +76,7 @@ class ImagePredictionActivity : AppCompatActivity() {
 
         //Settaggio dei bottoni, textview, imageview e toolbar
         val takePictureButton = findViewById<Button>(R.id.openCamera)
-        val pickImageButton = findViewById<Button>(R.id.openFavorites)
+        val pickImageButton = findViewById<Button>(R.id.openGallery)
         val predictButton = findViewById<Button>(R.id.predictButton)
         val buttonToRecipeResult = findViewById<Button>(R.id.toRecipeResult)
         val foodName= findViewById<TextView>(R.id.foodName)
